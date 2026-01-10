@@ -219,32 +219,33 @@ const HomePage = () => {
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-br from-green-600 via-green-700 to-green-800 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl" />
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-float animation-delay-1000" />
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-lime-300 rounded-full blur-3xl animate-pulse-slow" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-            <Sprout className="w-4 h-4 text-green-200" />
+          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6 animate-bounce-slow">
+            <Sprout className="w-4 h-4 text-lime-200" />
             <span className="text-green-100 text-sm font-medium">Join Our Community</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 animate-fade-in-up animation-delay-200">
             Ready to Grow with Bloom Agriculture?
           </h2>
 
-          <p className="text-xl text-green-100 mb-10 max-w-2xl mx-auto">
+          <p className="text-xl text-green-100 mb-10 max-w-2xl mx-auto animate-fade-in-up animation-delay-300">
             Join successful Namibian farmers who trust our products and expertise.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-400">
             <Link to="/contact">
-              <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 rounded-full px-8 text-lg font-semibold shadow-xl w-full sm:w-auto" data-testid="cta-contact-btn">
+              <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 rounded-full px-8 text-lg font-semibold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 w-full sm:w-auto" data-testid="cta-contact-btn">
                 Contact Us Today <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
             <Link to="/gallery">
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 rounded-full px-8 text-lg backdrop-blur-sm w-full sm:w-auto" data-testid="cta-gallery-btn">
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 rounded-full px-8 text-lg backdrop-blur-sm hover:scale-105 transition-all duration-300 w-full sm:w-auto" data-testid="cta-gallery-btn">
                 View Our Gallery
               </Button>
             </Link>
