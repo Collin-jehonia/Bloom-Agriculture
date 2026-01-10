@@ -161,9 +161,9 @@ const HomePage = () => {
             ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-12 animate-fade-in-up animation-delay-500">
             <Link to="/services">
-              <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8">
+              <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8 hover:scale-105 transition-all duration-300">
                 View All Services <ChevronRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
@@ -173,10 +173,10 @@ const HomePage = () => {
 
       {/* Featured Events */}
       {events.length > 0 && (
-        <section className="py-24 bg-gray-50">
+        <section className="py-24 bg-gray-50 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16 animate-fade-in-up">
-              <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-green-50">
+              <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-green-50 animate-bounce-slow">
                 <Calendar className="w-4 h-4 mr-2" /> Upcoming Events
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Join Our Events</h2>
@@ -185,11 +185,11 @@ const HomePage = () => {
 
             <div className="grid md:grid-cols-2 gap-8">
               {events.map((event, index) => (
-                <Card key={event.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <div className="relative h-48">
-                    <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
+                <Card key={event.id} className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in-up group" style={{ animationDelay: `${index * 0.15}s` }}>
+                  <div className="relative h-48 overflow-hidden">
+                    <img src={event.image_url} alt={event.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className="absolute top-4 left-4">
-                      <Badge className="bg-green-600 text-white">{event.category}</Badge>
+                      <Badge className="bg-green-600 text-white animate-pulse">{event.category}</Badge>
                     </div>
                   </div>
                   <CardContent className="p-6">
