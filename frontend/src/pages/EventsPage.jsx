@@ -46,22 +46,22 @@ const EventsPage = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-green-900 via-green-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-lime-400 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-400 rounded-full blur-3xl" />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center animate-fade-in-up">
-            <Badge variant="outline" className="mb-4 text-emerald-300 border-emerald-400/30 bg-emerald-500/10">
+            <Badge variant="outline" className="mb-4 text-lime-300 border-lime-400/30 bg-green-500/10">
               <CalendarDays className="w-4 h-4 mr-2" /> Events & Workshops
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
               Upcoming Events
-              <span className="block text-emerald-400">& Training Sessions</span>
+              <span className="block text-lime-400">& Training Sessions</span>
             </h1>
-            <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
+            <p className="text-xl text-green-100 max-w-3xl mx-auto">
               Join our workshops, seminars, and events to learn modern farming techniques and connect with the agricultural community.
             </p>
           </div>
@@ -79,8 +79,8 @@ const EventsPage = () => {
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 className={`rounded-full ${
                   selectedCategory === category.id
-                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                    : 'border-emerald-200 text-emerald-700 hover:bg-emerald-50'
+                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                    : 'border-green-200 text-green-700 hover:bg-green-50'
                 }`}
                 onClick={() => setSelectedCategory(category.id)}
                 data-testid={`events-filter-${category.id}`}
@@ -120,7 +120,7 @@ const EventsPage = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     <div className="absolute top-4 left-4 flex gap-2">
-                      <Badge className="bg-emerald-600 text-white">{event.category}</Badge>
+                      <Badge className="bg-green-600 text-white">{event.category}</Badge>
                       {event.is_featured && <Badge className="bg-yellow-500 text-white">Featured</Badge>}
                     </div>
                     <div className="absolute bottom-4 left-4 right-4">
@@ -130,21 +130,21 @@ const EventsPage = () => {
                   <CardContent className="p-6">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                       <div className="flex items-center gap-2 text-gray-600">
-                        <Calendar className="w-5 h-5 text-emerald-600" />
+                        <Calendar className="w-5 h-5 text-green-600" />
                         <span className="text-sm">{formatDate(event.date)}</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
-                        <Clock className="w-5 h-5 text-emerald-600" />
+                        <Clock className="w-5 h-5 text-green-600" />
                         <span className="text-sm">{event.time}</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
-                        <MapPin className="w-5 h-5 text-emerald-600" />
+                        <MapPin className="w-5 h-5 text-green-600" />
                         <span className="text-sm truncate">{event.location}</span>
                       </div>
                     </div>
                     <p className="text-gray-600 mb-6 line-clamp-3">{event.description}</p>
                     <Link to="/contact">
-                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full">
+                      <Button className="w-full bg-green-600 hover:bg-green-700 text-white rounded-full">
                         Register Interest <ArrowRight className="w-5 h-5 ml-2" />
                       </Button>
                     </Link>
@@ -164,7 +164,7 @@ const EventsPage = () => {
             Partner with Bloom Agriculture to organize training sessions, workshops, or agricultural events in your area.
           </p>
           <Link to="/contact">
-            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8">
+            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8">
               Contact Us <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </Link>

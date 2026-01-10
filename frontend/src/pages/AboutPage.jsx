@@ -21,22 +21,22 @@ const AboutPage = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-green-900 via-green-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-lime-400 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-400 rounded-full blur-3xl" />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center animate-fade-in-up">
-            <Badge variant="outline" className="mb-4 text-emerald-300 border-emerald-400/30 bg-emerald-500/10">
+            <Badge variant="outline" className="mb-4 text-lime-300 border-lime-400/30 bg-green-500/10">
               <Leaf className="w-4 h-4 mr-2" /> About Us
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
               Empowering Namibian Farmers
-              <span className="block text-emerald-400">Since 2018</span>
+              <span className="block text-lime-400">Since 2018</span>
             </h1>
-            <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
+            <p className="text-xl text-green-100 max-w-3xl mx-auto">
               Bloom Agriculture Namibia CC is a proudly Namibian agricultural company committed to empowering farmers through high-quality products, expert consultancy, and practical training.
             </p>
           </div>
@@ -58,16 +58,16 @@ const AboutPage = () => {
                   <img src="https://images.pexels.com/photos/3307282/pexels-photo-3307282.jpeg" alt="Harvest" className="rounded-2xl shadow-lg h-48 w-full object-cover hover:scale-105 transition-transform duration-300" />
                 </div>
               </div>
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-emerald-600 text-white rounded-2xl px-8 py-4 shadow-xl hidden lg:block">
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-green-600 text-white rounded-2xl px-8 py-4 shadow-xl hidden lg:block">
                 <div className="text-center">
                   <span className="text-3xl font-bold">10+</span>
-                  <p className="text-emerald-100 text-sm">Years of Excellence</p>
+                  <p className="text-green-100 text-sm">Years of Excellence</p>
                 </div>
               </div>
             </div>
 
             <div className="animate-fade-in-right">
-              <Badge variant="outline" className="mb-4 text-emerald-600 border-emerald-200 bg-emerald-50">
+              <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-green-50">
                 <Target className="w-4 h-4 mr-2" /> Our Story
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Growing Together with Namibia</h2>
@@ -81,7 +81,7 @@ const AboutPage = () => {
                 At Bloom Agriculture, we focus on <strong>smart farming</strong>, <strong>sustainable production</strong>, and <strong>successful harvesting</strong>, striving for innovation, outstanding service, and strong, lasting relationships with farmers across Namibia.
               </p>
               <Link to="/contact">
-                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8">
+                <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8">
                   Get In Touch <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
@@ -91,10 +91,10 @@ const AboutPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-emerald-50">
+      <section className="py-24 bg-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in-up">
-            <Badge variant="outline" className="mb-4 text-emerald-600 border-emerald-200 bg-white">
+            <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-white">
               <Award className="w-4 h-4 mr-2" /> Why Choose Us
             </Badge>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">What Sets Us Apart</h2>
@@ -104,8 +104,8 @@ const AboutPage = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <div key={index} className="group p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-emerald-600 transition-colors">
-                  <feature.icon className="w-7 h-7 text-emerald-600 group-hover:text-white transition-colors" />
+                <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-green-600 transition-colors">
+                  <feature.icon className="w-7 h-7 text-green-600 group-hover:text-white transition-colors" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
                 <p className="text-gray-600">{feature.description}</p>
@@ -120,7 +120,7 @@ const AboutPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="animate-fade-in-left">
-              <Badge variant="outline" className="mb-4 text-emerald-600 border-emerald-200 bg-emerald-50">
+              <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-green-50">
                 <Heart className="w-4 h-4 mr-2" /> Our Values
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">The Principles That Guide Us</h2>
@@ -130,7 +130,7 @@ const AboutPage = () => {
               <div className="grid sm:grid-cols-2 gap-6">
                 {values.map((value, index) => (
                   <div key={index} className="flex gap-3 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <CheckCircle2 className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-1" />
+                    <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                     <div>
                       <h4 className="font-semibold text-gray-900">{value.title}</h4>
                       <p className="text-sm text-gray-600">{value.description}</p>
@@ -141,7 +141,7 @@ const AboutPage = () => {
             </div>
 
             <div className="relative animate-fade-in-right">
-              <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500 to-green-500 rounded-3xl blur-2xl opacity-20" />
+              <div className="absolute -inset-4 bg-gradient-to-r from-green-500 to-green-500 rounded-3xl blur-2xl opacity-20" />
               <img src="https://images.unsplash.com/photo-1741874299706-2b8e16839aaa" alt="Namibian Farm" className="relative rounded-3xl shadow-2xl w-full h-[500px] object-cover" />
             </div>
           </div>
@@ -154,18 +154,18 @@ const AboutPage = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">Ready to Partner With Us?</h2>
           <p className="text-xl text-gray-400 mb-8">Let's discuss how we can help your agricultural business grow</p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <a href="tel:0813228282" className="flex items-center gap-3 text-emerald-400 hover:text-emerald-300 transition-colors">
+            <a href="tel:0813228282" className="flex items-center gap-3 text-lime-400 hover:text-lime-300 transition-colors">
               <Phone className="w-6 h-6" />
               <span className="text-lg font-medium">081 322 8282</span>
             </a>
-            <a href="mailto:bloomagricnam@gmail.com" className="flex items-center gap-3 text-emerald-400 hover:text-emerald-300 transition-colors">
+            <a href="mailto:bloomagricnam@gmail.com" className="flex items-center gap-3 text-lime-400 hover:text-lime-300 transition-colors">
               <Mail className="w-6 h-6" />
               <span className="text-lg font-medium">bloomagricnam@gmail.com</span>
             </a>
           </div>
           <div className="mt-8">
             <Link to="/contact">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8">
+              <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8">
                 Contact Us Now <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>

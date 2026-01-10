@@ -204,7 +204,7 @@ const AdminPage = () => {
   // Login Screen
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 flex items-center justify-center p-4">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-20 left-10 w-72 h-72 bg-green-400 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-lime-400 rounded-full blur-3xl" />
@@ -231,7 +231,7 @@ const AdminPage = () => {
                   type="text"
                   value={loginForm.username}
                   onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none"
                   placeholder="Enter username"
                   required
                   data-testid="admin-username"
@@ -243,18 +243,18 @@ const AdminPage = () => {
                   type="password"
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none"
                   placeholder="Enter password"
                   required
                   data-testid="admin-password"
                 />
               </div>
-              <Button type="submit" disabled={isLoggingIn} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-6" data-testid="admin-login-btn">
+              <Button type="submit" disabled={isLoggingIn} className="w-full bg-green-600 hover:bg-green-700 text-white rounded-xl py-6" data-testid="admin-login-btn">
                 {isLoggingIn ? "Signing In..." : "Sign In"}
               </Button>
             </form>
             <div className="mt-6 text-center">
-              <Link to="/" className="text-emerald-600 hover:text-emerald-700 text-sm">
+              <Link to="/" className="text-green-600 hover:text-green-700 text-sm">
                 ← Back to Website
               </Link>
             </div>
@@ -273,7 +273,7 @@ const AdminPage = () => {
       {/* Notification */}
       {notification && (
         <div className={`fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg flex items-center gap-3 animate-fade-in-up ${
-          notification.type === 'error' ? 'bg-red-500 text-white' : 'bg-emerald-500 text-white'
+          notification.type === 'error' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
         }`}>
           {notification.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <CheckCircle2 className="w-5 h-5" />}
           {notification.message}
@@ -291,7 +291,7 @@ const AdminPage = () => {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <Link to="/" className="text-gray-600 hover:text-emerald-600 text-sm hidden sm:block">
+              <Link to="/" className="text-gray-600 hover:text-green-600 text-sm hidden sm:block">
                 View Website
               </Link>
               <Button variant="outline" size="sm" onClick={handleLogout} className="text-red-600 border-red-200 hover:bg-red-50">
@@ -306,16 +306,16 @@ const AdminPage = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-white p-1 rounded-xl shadow-sm">
-            <TabsTrigger value="dashboard" className="rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
+            <TabsTrigger value="dashboard" className="rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white">
               <LayoutDashboard className="w-4 h-4 mr-2" /> Dashboard
             </TabsTrigger>
-            <TabsTrigger value="gallery" className="rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
+            <TabsTrigger value="gallery" className="rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white">
               <Images className="w-4 h-4 mr-2" /> Gallery
             </TabsTrigger>
-            <TabsTrigger value="events" className="rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
+            <TabsTrigger value="events" className="rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white">
               <CalendarDays className="w-4 h-4 mr-2" /> Events
             </TabsTrigger>
-            <TabsTrigger value="messages" className="rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
+            <TabsTrigger value="messages" className="rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white">
               <MessageSquare className="w-4 h-4 mr-2" /> Messages
               {stats.unread_messages > 0 && (
                 <Badge className="ml-2 bg-red-500 text-white">{stats.unread_messages}</Badge>
@@ -333,8 +333,8 @@ const AdminPage = () => {
                       <p className="text-sm text-gray-500">Gallery Items</p>
                       <p className="text-3xl font-bold text-gray-900">{stats.gallery_count}</p>
                     </div>
-                    <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                      <Images className="w-6 h-6 text-emerald-600" />
+                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                      <Images className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
                 </CardContent>
@@ -385,7 +385,7 @@ const AdminPage = () => {
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-4">
-                <Button onClick={() => { setEditingItem(null); setGalleryForm({ title: "", description: "", image_url: "", category: "general" }); setShowGalleryModal(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+                <Button onClick={() => { setEditingItem(null); setGalleryForm({ title: "", description: "", image_url: "", category: "general" }); setShowGalleryModal(true); }} className="bg-green-600 hover:bg-green-700">
                   <Plus className="w-4 h-4 mr-2" /> Add Gallery Item
                 </Button>
                 <Button onClick={() => { setEditingItem(null); setEventForm({ title: "", description: "", date: "", time: "", location: "", image_url: "", category: "workshop", is_featured: false }); setShowEventModal(true); }} className="bg-blue-600 hover:bg-blue-700">
@@ -402,7 +402,7 @@ const AdminPage = () => {
           <TabsContent value="gallery" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Gallery Management</h2>
-              <Button onClick={() => { setEditingItem(null); setGalleryForm({ title: "", description: "", image_url: "", category: "general" }); setShowGalleryModal(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+              <Button onClick={() => { setEditingItem(null); setGalleryForm({ title: "", description: "", image_url: "", category: "general" }); setShowGalleryModal(true); }} className="bg-green-600 hover:bg-green-700">
                 <Plus className="w-4 h-4 mr-2" /> Add Item
               </Button>
             </div>
@@ -412,7 +412,7 @@ const AdminPage = () => {
                 <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="relative h-40">
                     <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-                    <Badge className="absolute top-2 left-2 bg-emerald-600">{item.category}</Badge>
+                    <Badge className="absolute top-2 left-2 bg-green-600">{item.category}</Badge>
                   </div>
                   <CardContent className="p-4">
                     <h3 className="font-semibold text-gray-900 truncate">{item.title}</h3>
@@ -435,7 +435,7 @@ const AdminPage = () => {
           <TabsContent value="events" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Events Management</h2>
-              <Button onClick={() => { setEditingItem(null); setEventForm({ title: "", description: "", date: "", time: "", location: "", image_url: "", category: "workshop", is_featured: false }); setShowEventModal(true); }} className="bg-emerald-600 hover:bg-emerald-700">
+              <Button onClick={() => { setEditingItem(null); setEventForm({ title: "", description: "", date: "", time: "", location: "", image_url: "", category: "workshop", is_featured: false }); setShowEventModal(true); }} className="bg-green-600 hover:bg-green-700">
                 <Plus className="w-4 h-4 mr-2" /> Add Event
               </Button>
             </div>
@@ -446,7 +446,7 @@ const AdminPage = () => {
                   <div className="relative h-40">
                     <img src={event.image_url || 'https://images.unsplash.com/photo-1746014929708-fcb859fd3185'} alt={event.title} className="w-full h-full object-cover" />
                     <div className="absolute top-2 left-2 flex gap-2">
-                      <Badge className="bg-emerald-600">{event.category}</Badge>
+                      <Badge className="bg-green-600">{event.category}</Badge>
                       {event.is_featured && <Badge className="bg-yellow-500">Featured</Badge>}
                     </div>
                   </div>
@@ -476,13 +476,13 @@ const AdminPage = () => {
                 <Card><CardContent className="p-8 text-center text-gray-500">No messages yet</CardContent></Card>
               ) : (
                 messages.map((msg) => (
-                  <Card key={msg.id} className={`hover:shadow-lg transition-shadow ${!msg.is_read ? 'border-l-4 border-l-emerald-500' : ''}`}>
+                  <Card key={msg.id} className={`hover:shadow-lg transition-shadow ${!msg.is_read ? 'border-l-4 border-l-green-500' : ''}`}>
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start">
                         <div className="flex-grow">
                           <div className="flex items-center gap-3 mb-2">
                             <h3 className="font-semibold text-gray-900">{msg.name}</h3>
-                            {!msg.is_read && <Badge className="bg-emerald-500">New</Badge>}
+                            {!msg.is_read && <Badge className="bg-green-500">New</Badge>}
                           </div>
                           <p className="text-sm text-gray-500 mb-1">{msg.email} {msg.phone && `| ${msg.phone}`}</p>
                           <p className="text-gray-700 mt-2">{msg.message}</p>
@@ -517,15 +517,15 @@ const AdminPage = () => {
           <div className="space-y-4 py-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
-              <input type="text" value={galleryForm.title} onChange={(e) => setGalleryForm({ ...galleryForm, title: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none" placeholder="Enter title" required />
+              <input type="text" value={galleryForm.title} onChange={(e) => setGalleryForm({ ...galleryForm, title: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="Enter title" required />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Image URL *</label>
-              <input type="url" value={galleryForm.image_url} onChange={(e) => setGalleryForm({ ...galleryForm, image_url: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none" placeholder="https://example.com/image.jpg" required />
+              <input type="url" value={galleryForm.image_url} onChange={(e) => setGalleryForm({ ...galleryForm, image_url: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="https://example.com/image.jpg" required />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-              <select value={galleryForm.category} onChange={(e) => setGalleryForm({ ...galleryForm, category: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none">
+              <select value={galleryForm.category} onChange={(e) => setGalleryForm({ ...galleryForm, category: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none">
                 <option value="general">General</option>
                 <option value="products">Products</option>
                 <option value="projects">Projects</option>
@@ -537,7 +537,7 @@ const AdminPage = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-              <textarea rows={3} value={galleryForm.description} onChange={(e) => setGalleryForm({ ...galleryForm, description: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none resize-none" placeholder="Brief description" />
+              <textarea rows={3} value={galleryForm.description} onChange={(e) => setGalleryForm({ ...galleryForm, description: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none resize-none" placeholder="Brief description" />
             </div>
             {galleryForm.image_url && (
               <div className="rounded-xl overflow-hidden border">
@@ -547,7 +547,7 @@ const AdminPage = () => {
           </div>
           <div className="flex gap-3 justify-end">
             <Button variant="outline" onClick={() => setShowGalleryModal(false)}>Cancel</Button>
-            <Button onClick={handleSaveGallery} disabled={isSaving || !galleryForm.title || !galleryForm.image_url} className="bg-emerald-600 hover:bg-emerald-700">
+            <Button onClick={handleSaveGallery} disabled={isSaving || !galleryForm.title || !galleryForm.image_url} className="bg-green-600 hover:bg-green-700">
               {isSaving ? 'Saving...' : <><Save className="w-4 h-4 mr-2" /> Save</>}
             </Button>
           </div>
@@ -563,30 +563,30 @@ const AdminPage = () => {
           <div className="space-y-4 py-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
-              <input type="text" value={eventForm.title} onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none" placeholder="Event title" required />
+              <input type="text" value={eventForm.title} onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="Event title" required />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Date *</label>
-                <input type="date" value={eventForm.date} onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none" required />
+                <input type="date" value={eventForm.date} onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" required />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Time *</label>
-                <input type="text" value={eventForm.time} onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none" placeholder="9:00 AM - 4:00 PM" required />
+                <input type="text" value={eventForm.time} onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="9:00 AM - 4:00 PM" required />
               </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
-              <input type="text" value={eventForm.location} onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none" placeholder="Event location" required />
+              <input type="text" value={eventForm.location} onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="Event location" required />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
-              <input type="url" value={eventForm.image_url} onChange={(e) => setEventForm({ ...eventForm, image_url: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none" placeholder="https://example.com/image.jpg" />
+              <input type="url" value={eventForm.image_url} onChange={(e) => setEventForm({ ...eventForm, image_url: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="https://example.com/image.jpg" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                <select value={eventForm.category} onChange={(e) => setEventForm({ ...eventForm, category: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none">
+                <select value={eventForm.category} onChange={(e) => setEventForm({ ...eventForm, category: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none">
                   <option value="workshop">Workshop</option>
                   <option value="seminar">Seminar</option>
                   <option value="exhibition">Exhibition</option>
@@ -594,19 +594,19 @@ const AdminPage = () => {
               </div>
               <div className="flex items-end">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={eventForm.is_featured} onChange={(e) => setEventForm({ ...eventForm, is_featured: e.target.checked })} className="w-5 h-5 text-emerald-600 rounded" />
+                  <input type="checkbox" checked={eventForm.is_featured} onChange={(e) => setEventForm({ ...eventForm, is_featured: e.target.checked })} className="w-5 h-5 text-green-600 rounded" />
                   <span className="text-sm font-medium text-gray-700">Featured Event</span>
                 </label>
               </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
-              <textarea rows={4} value={eventForm.description} onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 outline-none resize-none" placeholder="Event description" required />
+              <textarea rows={4} value={eventForm.description} onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none resize-none" placeholder="Event description" required />
             </div>
           </div>
           <div className="flex gap-3 justify-end">
             <Button variant="outline" onClick={() => setShowEventModal(false)}>Cancel</Button>
-            <Button onClick={handleSaveEvent} disabled={isSaving || !eventForm.title || !eventForm.date || !eventForm.time || !eventForm.location || !eventForm.description} className="bg-emerald-600 hover:bg-emerald-700">
+            <Button onClick={handleSaveEvent} disabled={isSaving || !eventForm.title || !eventForm.date || !eventForm.time || !eventForm.location || !eventForm.description} className="bg-green-600 hover:bg-green-700">
               {isSaving ? 'Saving...' : <><Save className="w-4 h-4 mr-2" /> Save</>}
             </Button>
           </div>

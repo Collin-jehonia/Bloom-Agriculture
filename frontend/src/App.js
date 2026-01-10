@@ -94,14 +94,14 @@ const Navigation = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`font-medium transition-colors hover:text-emerald-500 ${textColor} ${location.pathname === link.href ? 'text-emerald-500' : ''}`}
+                className={`font-medium transition-colors hover:text-green-500 ${textColor} ${location.pathname === link.href ? 'text-green-500' : ''}`}
                 data-testid={`nav-${link.name.toLowerCase()}`}
               >
                 {link.name}
               </Link>
             ))}
             <Link to="/contact">
-              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-6" data-testid="nav-get-started">
+              <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full px-6" data-testid="nav-get-started">
                 Get Started
               </Button>
             </Link>
@@ -120,13 +120,13 @@ const Navigation = () => {
                     key={link.name}
                     to={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="text-lg font-medium text-gray-700 hover:text-emerald-600"
+                    className="text-lg font-medium text-gray-700 hover:text-green-600"
                   >
                     {link.name}
                   </Link>
                 ))}
                 <Link to="/contact" onClick={() => setMobileOpen(false)}>
-                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full mt-4 w-full">
+                  <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full mt-4 w-full">
                     Get Started
                   </Button>
                 </Link>
@@ -176,13 +176,13 @@ const Footer = () => {
             <ul className="space-y-3">
               {["Home", "About", "Services", "Gallery", "Events", "Contact"].map((link) => (
                 <li key={link}>
-                  <Link to={`/${link.toLowerCase() === 'home' ? '' : link.toLowerCase()}`} className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  <Link to={`/${link.toLowerCase() === 'home' ? '' : link.toLowerCase()}`} className="text-gray-400 hover:text-lime-400 transition-colors">
                     {link}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link to="/admin" className="text-gray-500 hover:text-emerald-400 transition-colors text-sm">
+                <Link to="/admin" className="text-gray-500 hover:text-lime-400 transition-colors text-sm">
                   Admin Portal
                 </Link>
               </li>
@@ -193,15 +193,15 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-6">Contact Info</h4>
             <ul className="space-y-4 text-gray-400">
               <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-emerald-500" />
-                <a href="tel:0813228282" className="hover:text-emerald-400">081 322 8282</a>
+                <Phone className="w-5 h-5 text-green-500" />
+                <a href="tel:0813228282" className="hover:text-lime-400">081 322 8282</a>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-emerald-500" />
-                <a href="mailto:bloomagricnam@gmail.com" className="hover:text-emerald-400">bloomagricnam@gmail.com</a>
+                <Mail className="w-5 h-5 text-green-500" />
+                <a href="mailto:bloomagricnam@gmail.com" className="hover:text-lime-400">bloomagricnam@gmail.com</a>
               </li>
               <li className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-emerald-500" />
+                <MapPin className="w-5 h-5 text-green-500" />
                 <span>Windhoek, Namibia</span>
               </li>
             </ul>

@@ -58,20 +58,20 @@ const HomePage = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/70 to-gray-900/50" />
         </div>
 
-        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl animate-pulse-slow animation-delay-1000" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-green-500/20 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-600/10 rounded-full blur-3xl animate-pulse-slow animation-delay-1000" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left animate-fade-in-up">
-              <div className="inline-flex items-center gap-2 bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-full px-4 py-2 mb-6">
-                <Sprout className="w-4 h-4 text-emerald-400" />
-                <span className="text-emerald-300 text-sm font-medium">Proudly Namibian Since 2018</span>
+              <div className="inline-flex items-center gap-2 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full px-4 py-2 mb-6">
+                <Sprout className="w-4 h-4 text-lime-400" />
+                <span className="text-lime-300 text-sm font-medium">Proudly Namibian Since 2018</span>
               </div>
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
                 Grow with
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-300">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-green-300">
                   Sustainable Solutions
                 </span>
               </h1>
@@ -82,7 +82,7 @@ const HomePage = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
                 <Link to="/services">
-                  <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8 text-lg group w-full sm:w-auto" data-testid="hero-explore-btn">
+                  <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8 text-lg group w-full sm:w-auto" data-testid="hero-explore-btn">
                     Explore Services
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -97,7 +97,7 @@ const HomePage = () => {
               <div className="grid grid-cols-3 gap-6">
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center lg:text-left animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <div className="text-3xl sm:text-4xl font-bold text-emerald-400">{stat.value}</div>
+                    <div className="text-3xl sm:text-4xl font-bold text-lime-400">{stat.value}</div>
                     <div className="text-sm text-gray-400">{stat.label}</div>
                   </div>
                 ))}
@@ -106,15 +106,15 @@ const HomePage = () => {
 
             <div className="hidden lg:block animate-fade-in-right">
               <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500 to-green-500 rounded-3xl blur-2xl opacity-30 animate-pulse-slow" />
+                <div className="absolute -inset-4 bg-gradient-to-r from-green-500 to-green-500 rounded-3xl blur-2xl opacity-30 animate-pulse-slow" />
                 <img
                   src="https://images.unsplash.com/photo-1746014929708-fcb859fd3185?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85"
                   alt="African Farmer"
                   className="relative rounded-3xl shadow-2xl w-full h-[500px] object-cover"
                 />
                 <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-4 flex items-center gap-4 animate-bounce-slow">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-                    <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle2 className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">Quality Guaranteed</p>
@@ -137,12 +137,12 @@ const HomePage = () => {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in-up">
-            <Badge variant="outline" className="mb-4 text-emerald-600 border-emerald-200 bg-emerald-50">
+            <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-green-50">
               <Leaf className="w-4 h-4 mr-2" /> Our Services
             </Badge>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               Comprehensive Agricultural
-              <span className="block text-emerald-600">Solutions</span>
+              <span className="block text-green-600">Solutions</span>
             </h2>
           </div>
 
@@ -150,10 +150,10 @@ const HomePage = () => {
             {services.map((service, index) => (
               <Card key={index} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }} data-testid={`service-card-${index}`}>
                 <CardContent className="p-6">
-                  <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-emerald-600 transition-colors">
-                    <service.icon className="w-7 h-7 text-emerald-600 group-hover:text-white transition-colors" />
+                  <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-green-600 transition-colors">
+                    <service.icon className="w-7 h-7 text-green-600 group-hover:text-white transition-colors" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">{service.title}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">{service.title}</h3>
                   <p className="text-gray-600">{service.description}</p>
                 </CardContent>
               </Card>
@@ -162,7 +162,7 @@ const HomePage = () => {
 
           <div className="text-center mt-12">
             <Link to="/services">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8">
+              <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8">
                 View All Services <ChevronRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
@@ -175,7 +175,7 @@ const HomePage = () => {
         <section className="py-24 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16 animate-fade-in-up">
-              <Badge variant="outline" className="mb-4 text-emerald-600 border-emerald-200 bg-emerald-50">
+              <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-green-50">
                 <Calendar className="w-4 h-4 mr-2" /> Upcoming Events
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Join Our Events</h2>
@@ -188,7 +188,7 @@ const HomePage = () => {
                   <div className="relative h-48">
                     <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
                     <div className="absolute top-4 left-4">
-                      <Badge className="bg-emerald-600 text-white">{event.category}</Badge>
+                      <Badge className="bg-green-600 text-white">{event.category}</Badge>
                     </div>
                   </div>
                   <CardContent className="p-6">
@@ -206,7 +206,7 @@ const HomePage = () => {
 
             <div className="text-center mt-12">
               <Link to="/events">
-                <Button size="lg" variant="outline" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 rounded-full px-8">
+                <Button size="lg" variant="outline" className="border-green-600 text-green-600 hover:bg-green-50 rounded-full px-8">
                   View All Events <ChevronRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
@@ -216,7 +216,7 @@ const HomePage = () => {
       )}
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-emerald-600 via-emerald-700 to-green-800 relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-green-600 via-green-700 to-green-800 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl" />
@@ -224,21 +224,21 @@ const HomePage = () => {
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-in-up">
           <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-            <Sprout className="w-4 h-4 text-emerald-200" />
-            <span className="text-emerald-100 text-sm font-medium">Join Our Community</span>
+            <Sprout className="w-4 h-4 text-green-200" />
+            <span className="text-green-100 text-sm font-medium">Join Our Community</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Ready to Grow with Bloom Agriculture?
           </h2>
 
-          <p className="text-xl text-emerald-100 mb-10 max-w-2xl mx-auto">
+          <p className="text-xl text-green-100 mb-10 max-w-2xl mx-auto">
             Join successful Namibian farmers who trust our products and expertise.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/contact">
-              <Button size="lg" className="bg-white text-emerald-700 hover:bg-emerald-50 rounded-full px-8 text-lg font-semibold shadow-xl w-full sm:w-auto" data-testid="cta-contact-btn">
+              <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 rounded-full px-8 text-lg font-semibold shadow-xl w-full sm:w-auto" data-testid="cta-contact-btn">
                 Contact Us Today <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>

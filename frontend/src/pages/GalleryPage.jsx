@@ -44,22 +44,22 @@ const GalleryPage = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-green-900 via-green-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-lime-400 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-400 rounded-full blur-3xl" />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center animate-fade-in-up">
-            <Badge variant="outline" className="mb-4 text-emerald-300 border-emerald-400/30 bg-emerald-500/10">
+            <Badge variant="outline" className="mb-4 text-lime-300 border-lime-400/30 bg-green-500/10">
               <Image className="w-4 h-4 mr-2" /> Our Gallery
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
               Explore Our Work
-              <span className="block text-emerald-400">& Success Stories</span>
+              <span className="block text-lime-400">& Success Stories</span>
             </h1>
-            <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
+            <p className="text-xl text-green-100 max-w-3xl mx-auto">
               Browse through our collection of projects, training sessions, and success stories from farms across Namibia.
             </p>
           </div>
@@ -77,8 +77,8 @@ const GalleryPage = () => {
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 className={`rounded-full ${
                   selectedCategory === category.id 
-                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
-                    : 'border-emerald-200 text-emerald-700 hover:bg-emerald-50'
+                    ? 'bg-green-600 hover:bg-green-700 text-white' 
+                    : 'border-green-200 text-green-700 hover:bg-green-50'
                 }`}
                 onClick={() => setSelectedCategory(category.id)}
                 data-testid={`gallery-filter-${category.id}`}
@@ -118,7 +118,7 @@ const GalleryPage = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <Badge className="mb-2 bg-emerald-600 text-white">{item.category}</Badge>
+                      <Badge className="mb-2 bg-green-600 text-white">{item.category}</Badge>
                       <h3 className="text-white font-semibold">{item.title}</h3>
                     </div>
                     <div className="absolute top-4 right-4">
@@ -154,7 +154,7 @@ const GalleryPage = () => {
                 className="w-full max-h-[80vh] object-contain"
               />
               <div className="p-6 bg-black/80">
-                <Badge className="mb-2 bg-emerald-600 text-white">{selectedImage.category}</Badge>
+                <Badge className="mb-2 bg-green-600 text-white">{selectedImage.category}</Badge>
                 <h3 className="text-xl font-bold text-white mb-2">{selectedImage.title}</h3>
                 <p className="text-gray-300">{selectedImage.description}</p>
               </div>

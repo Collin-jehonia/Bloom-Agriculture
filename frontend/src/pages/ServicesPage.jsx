@@ -56,22 +56,22 @@ const ServicesPage = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-green-900 via-green-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-lime-400 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-400 rounded-full blur-3xl" />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center animate-fade-in-up">
-            <Badge variant="outline" className="mb-4 text-emerald-300 border-emerald-400/30 bg-emerald-500/10">
+            <Badge variant="outline" className="mb-4 text-lime-300 border-lime-400/30 bg-green-500/10">
               <Leaf className="w-4 h-4 mr-2" /> Our Services
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
               Comprehensive Agricultural
-              <span className="block text-emerald-400">Solutions</span>
+              <span className="block text-lime-400">Solutions</span>
             </h1>
-            <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
+            <p className="text-xl text-green-100 max-w-3xl mx-auto">
               At Bloom Agriculture, we provide comprehensive agricultural solutions customized for Namibia's unique farming challenges - from premium inputs to expert consultancy.
             </p>
           </div>
@@ -86,18 +86,18 @@ const ServicesPage = () => {
               <div key={index} className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
                 <div className={`${index % 2 === 1 ? 'lg:order-2' : ''} animate-fade-in-up`}>
                   <div className="relative group">
-                    <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500 to-green-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                    <div className="absolute -inset-4 bg-gradient-to-r from-green-500 to-green-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
                     <img src={service.image} alt={service.title} className="relative rounded-3xl shadow-2xl w-full h-[400px] object-cover group-hover:scale-[1.02] transition-transform duration-300" />
                     <div className="absolute top-6 left-6">
                       <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-                        <service.icon className="w-8 h-8 text-emerald-600" />
+                        <service.icon className="w-8 h-8 text-green-600" />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className={`${index % 2 === 1 ? 'lg:order-1' : ''} animate-fade-in-up`} style={{ animationDelay: '0.2s' }}>
-                  <Badge variant="outline" className="mb-4 text-emerald-600 border-emerald-200 bg-emerald-50">
+                  <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-green-50">
                     Service {String(index + 1).padStart(2, '0')}
                   </Badge>
                   <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{service.title}</h2>
@@ -106,14 +106,14 @@ const ServicesPage = () => {
                   <div className="grid sm:grid-cols-2 gap-4 mb-8">
                     {service.features.map((feature, fIndex) => (
                       <div key={fIndex} className="flex items-center gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                        <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
                         <span className="text-gray-700">{feature}</span>
                       </div>
                     ))}
                   </div>
 
                   <Link to="/contact">
-                    <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-6">
+                    <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full px-6">
                       Get This Service <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </Link>
@@ -125,24 +125,24 @@ const ServicesPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-emerald-600">
+      <section className="py-24 bg-green-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-in-up">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">Need a Custom Solution?</h2>
-          <p className="text-xl text-emerald-100 mb-8">
+          <p className="text-xl text-green-100 mb-8">
             Contact us today to discuss your specific agricultural needs. Our experts are ready to help.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8">
-            <a href="tel:0813228282" className="flex items-center gap-3 text-white hover:text-emerald-200 transition-colors">
+            <a href="tel:0813228282" className="flex items-center gap-3 text-white hover:text-green-200 transition-colors">
               <Phone className="w-6 h-6" />
               <span className="text-lg font-medium">081 322 8282</span>
             </a>
-            <a href="mailto:bloomagricnam@gmail.com" className="flex items-center gap-3 text-white hover:text-emerald-200 transition-colors">
+            <a href="mailto:bloomagricnam@gmail.com" className="flex items-center gap-3 text-white hover:text-green-200 transition-colors">
               <Mail className="w-6 h-6" />
               <span className="text-lg font-medium">bloomagricnam@gmail.com</span>
             </a>
           </div>
           <Link to="/contact">
-            <Button size="lg" className="bg-white text-emerald-700 hover:bg-emerald-50 rounded-full px-8">
+            <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 rounded-full px-8">
               Request a Consultation <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </Link>

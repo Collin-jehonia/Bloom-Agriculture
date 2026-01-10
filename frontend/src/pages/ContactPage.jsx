@@ -68,22 +68,22 @@ const ContactPage = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 overflow-hidden">
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-green-900 via-green-800 to-green-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-lime-400 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-400 rounded-full blur-3xl" />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center animate-fade-in-up">
-            <Badge variant="outline" className="mb-4 text-emerald-300 border-emerald-400/30 bg-emerald-500/10">
+            <Badge variant="outline" className="mb-4 text-lime-300 border-lime-400/30 bg-green-500/10">
               <MessageSquare className="w-4 h-4 mr-2" /> Contact Us
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
               Let's Start Growing
-              <span className="block text-emerald-400">Together</span>
+              <span className="block text-lime-400">Together</span>
             </h1>
-            <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
+            <p className="text-xl text-green-100 max-w-3xl mx-auto">
               Have questions about our products or services? We'd love to hear from you. Reach out and let's discuss how we can help your farm thrive.
             </p>
           </div>
@@ -107,8 +107,8 @@ const ContactPage = () => {
                 <Card key={index} className="hover:shadow-lg transition-shadow animate-fade-in-left" style={{ animationDelay: `${index * 0.1}s` }}>
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <info.icon className="w-6 h-6 text-emerald-600" />
+                      <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <info.icon className="w-6 h-6 text-green-600" />
                       </div>
                       <div className="flex-grow">
                         <h3 className="font-semibold text-gray-900 mb-2">{info.title}</h3>
@@ -116,7 +116,7 @@ const ContactPage = () => {
                           <p key={i} className="text-gray-600 text-sm">{detail}</p>
                         ))}
                         {info.action && (
-                          <a href={info.action} target={info.action.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer" className="inline-flex items-center text-emerald-600 font-medium text-sm mt-2 hover:text-emerald-700">
+                          <a href={info.action} target={info.action.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer" className="inline-flex items-center text-green-600 font-medium text-sm mt-2 hover:text-green-700">
                             {info.actionText} <ArrowRight className="w-4 h-4 ml-1" />
                           </a>
                         )}
@@ -133,14 +133,14 @@ const ContactPage = () => {
                 <CardContent className="p-8">
                   {submitted ? (
                     <div className="h-full flex flex-col items-center justify-center text-center py-12">
-                      <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mb-6 animate-bounce-slow">
-                        <CheckCircle2 className="w-10 h-10 text-emerald-600" />
+                      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6 animate-bounce-slow">
+                        <CheckCircle2 className="w-10 h-10 text-green-600" />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h3>
                       <p className="text-gray-600 mb-6 max-w-md">
                         We've received your message and will get back to you as soon as possible. For urgent inquiries, please call us directly.
                       </p>
-                      <Button onClick={() => setSubmitted(false)} className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full">
+                      <Button onClick={() => setSubmitted(false)} className="bg-green-600 hover:bg-green-700 text-white rounded-full">
                         Send Another Message
                       </Button>
                     </div>
@@ -162,7 +162,7 @@ const ContactPage = () => {
                             required
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all"
                             placeholder="Your full name"
                             data-testid="contact-name-input"
                           />
@@ -176,7 +176,7 @@ const ContactPage = () => {
                               required
                               value={formData.email}
                               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all"
                               placeholder="your@email.com"
                               data-testid="contact-email-input"
                             />
@@ -187,7 +187,7 @@ const ContactPage = () => {
                               type="tel"
                               value={formData.phone}
                               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all"
                               placeholder="081 XXX XXXX"
                               data-testid="contact-phone-input"
                             />
@@ -201,7 +201,7 @@ const ContactPage = () => {
                             rows={5}
                             value={formData.message}
                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all resize-none"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all resize-none"
                             placeholder="Tell us about your agricultural needs..."
                             data-testid="contact-message-input"
                           />
@@ -210,7 +210,7 @@ const ContactPage = () => {
                         <Button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full py-6 text-lg font-semibold"
+                          className="w-full bg-green-600 hover:bg-green-700 text-white rounded-full py-6 text-lg font-semibold"
                           data-testid="contact-submit-btn"
                         >
                           {isSubmitting ? (
