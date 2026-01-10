@@ -7,8 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import axios from "axios";
-import { API } from "@/App";
+import { eventsService, galleryService } from "@/lib/supabase";
 
 const HomePage = () => {
   const [events, setEvents] = useState([]);
@@ -17,12 +16,12 @@ const HomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [eventsRes, galleryRes] = await Promise.all([
-          axios.get(`${API}/events?featured_only=true`),
-          axios.get(`${API}/gallery`)
+        const [eventsData, galleryData] = await Promise.all([
+          eventsService.getAll(null, true),
+          galleryService.getAll()
         ]);
-        setEvents(eventsRes.data.slice(0, 2));
-        setGallery(galleryRes.data.slice(0, 4));
+        setEvents(eventsData.slice(0, 2));
+        setGallery(galleryData.slice(0, 4));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
