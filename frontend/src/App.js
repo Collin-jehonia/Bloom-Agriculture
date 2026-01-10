@@ -85,7 +85,7 @@ const Navigation = () => {
             <img 
               src={LOGO_URL} 
               alt="Bloom Agriculture Namibia" 
-              className={`h-14 w-auto transition-all ${!isScrolled && isHomePage ? 'brightness-0 invert' : ''}`}
+              className={`h-16 md:h-20 w-auto transition-all ${!isScrolled && isHomePage ? 'brightness-0 invert' : ''}`}
             />
           </Link>
 
