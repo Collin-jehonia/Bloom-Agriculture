@@ -3,8 +3,7 @@ import { Leaf, Image, Filter, X, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import axios from "axios";
-import { API } from "@/App";
+import { galleryService } from "@/lib/supabase";
 
 const GalleryPage = () => {
   const [gallery, setGallery] = useState([]);
@@ -28,8 +27,8 @@ const GalleryPage = () => {
 
   const fetchGallery = async () => {
     try {
-      const response = await axios.get(`${API}/gallery`);
-      setGallery(response.data);
+      const data = await galleryService.getAll();
+      setGallery(data);
     } catch (error) {
       console.error('Error fetching gallery:', error);
     } finally {
