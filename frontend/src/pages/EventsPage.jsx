@@ -4,8 +4,7 @@ import { Calendar, Clock, MapPin, ArrowRight, CalendarDays, Filter } from "lucid
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import axios from "axios";
-import { API } from "@/App";
+import { eventsService } from "@/lib/supabase";
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
@@ -25,8 +24,8 @@ const EventsPage = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`${API}/events`);
-      setEvents(response.data);
+      const data = await eventsService.getAll();
+      setEvents(data);
     } catch (error) {
       console.error('Error fetching events:', error);
     } finally {
