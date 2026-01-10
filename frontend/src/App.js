@@ -49,6 +49,9 @@ const AuthProvider = ({ children }) => {
   );
 };
 
+// Logo URL
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_bloom-redesign-1/artifacts/q2u8vu9s_image.png";
+
 // Navigation Component
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -73,20 +76,17 @@ const Navigation = () => {
   const isHomePage = location.pathname === "/";
   const navBg = isScrolled || !isHomePage ? "bg-white/95 backdrop-blur-md shadow-lg" : "bg-transparent";
   const textColor = isScrolled || !isHomePage ? "text-gray-700" : "text-white/90";
-  const logoTextColor = isScrolled || !isHomePage ? "text-gray-900" : "text-white";
 
   return (
     <nav data-testid="navigation" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center gap-3">
-            <div className={`p-2 rounded-xl ${isScrolled || !isHomePage ? 'bg-emerald-600' : 'bg-white/20 backdrop-blur-sm'}`}>
-              <Leaf className={`w-8 h-8 ${isScrolled || !isHomePage ? 'text-white' : 'text-emerald-400'}`} />
-            </div>
-            <div>
-              <span className={`text-xl font-bold ${logoTextColor}`}>Bloom Agriculture</span>
-              <p className={`text-xs ${isScrolled || !isHomePage ? 'text-emerald-600' : 'text-emerald-300'}`}>Namibia CC</p>
-            </div>
+          <Link to="/" className="flex items-center gap-2">
+            <img 
+              src={LOGO_URL} 
+              alt="Bloom Agriculture Namibia" 
+              className={`h-14 w-auto transition-all ${!isScrolled && isHomePage ? 'brightness-0 invert' : ''}`}
+            />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
