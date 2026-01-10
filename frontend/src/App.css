@@ -276,26 +276,26 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid #10b981;
+  outline: 2px solid #22c55e;
   outline-offset: 2px;
 }
 
 /* Selection color */
 ::selection {
-  background: #10b981;
+  background: #22c55e;
   color: white;
 }
 
 /* Pattern backgrounds */
 .pattern-dots {
-  background-image: radial-gradient(#10b981 1px, transparent 1px);
+  background-image: radial-gradient(#22c55e 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 .pattern-grid {
   background-image: 
-    linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 197, 94, 0.1) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
