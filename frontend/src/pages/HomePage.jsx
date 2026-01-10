@@ -81,33 +81,33 @@ const HomePage = () => {
                 Empowering Namibian farmers with premium agricultural products, expert consultancy, and practical training to boost productivity and sustainability.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12 animate-fade-in-up animation-delay-300">
                 <Link to="/services">
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8 text-lg group w-full sm:w-auto" data-testid="hero-explore-btn">
+                  <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full px-8 text-lg group w-full sm:w-auto hover-glow transition-all duration-300" data-testid="hero-explore-btn">
                     Explore Services
-                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" />
                   </Button>
                 </Link>
                 <Link to="/contact">
-                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 rounded-full px-8 text-lg backdrop-blur-sm w-full sm:w-auto" data-testid="hero-contact-btn">
+                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 rounded-full px-8 text-lg backdrop-blur-sm w-full sm:w-auto hover:scale-105 transition-all duration-300" data-testid="hero-contact-btn">
                     Contact Us
                   </Button>
                 </Link>
               </div>
 
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-3 gap-6 animate-fade-in-up animation-delay-400">
                 {stats.map((stat, index) => (
-                  <div key={index} className="text-center lg:text-left animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <div className="text-3xl sm:text-4xl font-bold text-lime-400">{stat.value}</div>
+                  <div key={index} className="text-center lg:text-left group" style={{ animationDelay: `${0.5 + index * 0.1}s` }}>
+                    <div className="text-3xl sm:text-4xl font-bold text-lime-400 group-hover:scale-110 transition-transform">{stat.value}</div>
                     <div className="text-sm text-gray-400">{stat.label}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="hidden lg:block animate-fade-in-right">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-green-500 to-green-500 rounded-3xl blur-2xl opacity-30 animate-pulse-slow" />
+            <div className="hidden lg:block animate-fade-in-right animation-delay-300">
+              <div className="relative group">
+                <div className="absolute -inset-4 bg-gradient-to-r from-green-500 to-lime-500 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity animate-pulse-slow" />
                 <img
                   src="https://images.unsplash.com/photo-1746014929708-fcb859fd3185?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85"
                   alt="African Farmer"
