@@ -216,6 +216,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm">© {currentYear} Bloom Agriculture Namibia CC. All rights reserved.</p>
           <p className="text-gray-500 text-sm">Smart Farming • Sustainable Production • Successful Harvesting</p>
+          <p className="text-gray-400 text-sm">Developed by <span className="text-green-500 font-semibold">NamStack</span></p>
         </div>
       </div>
     </footer>
