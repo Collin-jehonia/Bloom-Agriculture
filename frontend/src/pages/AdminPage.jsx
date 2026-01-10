@@ -13,6 +13,9 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import axios from "axios";
 import { API } from "@/App";
 
+// Logo URL
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_bloom-redesign-1/artifacts/q2u8vu9s_image.png";
+
 const AdminPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState(localStorage.getItem('adminToken'));
