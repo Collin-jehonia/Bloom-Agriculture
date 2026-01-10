@@ -53,30 +53,31 @@ const HomePage = () => {
           <img
             src="https://images.unsplash.com/photo-1741874299706-2b8e16839aaa?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHw0fHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85"
             alt="Sustainable Agriculture"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover animate-scale-in"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/70 to-gray-900/50" />
         </div>
 
         <div className="absolute top-20 left-10 w-72 h-72 bg-green-500/20 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-600/10 rounded-full blur-3xl animate-pulse-slow animation-delay-1000" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-lime-500/10 rounded-full blur-3xl animate-pulse-slow animation-delay-1000" />
+        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-green-400/10 rounded-full blur-3xl animate-float" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-center lg:text-left animate-fade-in-up">
-              <div className="inline-flex items-center gap-2 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full px-4 py-2 mb-6">
-                <Sprout className="w-4 h-4 text-lime-400" />
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full px-4 py-2 mb-6 animate-fade-in-down">
+                <Sprout className="w-4 h-4 text-lime-400 animate-bounce-slow" />
                 <span className="text-lime-300 text-sm font-medium">Proudly Namibian Since 2018</span>
               </div>
               
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 animate-fade-in-up">
                 Grow with
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-green-300">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-green-300 animate-pulse-slow">
                   Sustainable Solutions
                 </span>
               </h1>
               
-              <p className="text-lg text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0">
+              <p className="text-lg text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-in-up animation-delay-200">
                 Empowering Namibian farmers with premium agricultural products, expert consultancy, and practical training to boost productivity and sustainability.
               </p>
 
