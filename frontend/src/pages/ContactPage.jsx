@@ -4,8 +4,7 @@ import { Phone, Mail, MapPin, Send, CheckCircle2, Clock, ArrowRight, MessageSqua
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import axios from "axios";
-import { API } from "@/App";
+import { contactService } from "@/lib/supabase";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +23,7 @@ const ContactPage = () => {
     setError("");
     
     try {
-      await axios.post(`${API}/contact`, formData);
+      await contactService.create(formData);
       setSubmitted(true);
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (err) {
