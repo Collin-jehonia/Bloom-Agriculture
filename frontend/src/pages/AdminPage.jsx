@@ -285,12 +285,9 @@ const AdminPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-600 rounded-lg">
-                <Leaf className="w-6 h-6 text-white" />
-              </div>
+              <img src={LOGO_URL} alt="Bloom Agriculture" className="h-10 w-auto" />
               <div>
                 <span className="font-bold text-gray-900">Admin Portal</span>
-                <p className="text-xs text-gray-500">Bloom Agriculture</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
