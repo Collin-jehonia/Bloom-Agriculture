@@ -111,10 +111,10 @@ const HomePage = () => {
                 <img
                   src="https://images.unsplash.com/photo-1746014929708-fcb859fd3185?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85"
                   alt="African Farmer"
-                  className="relative rounded-3xl shadow-2xl w-full h-[500px] object-cover"
+                  className="relative rounded-3xl shadow-2xl w-full h-[500px] object-cover group-hover:scale-[1.02] transition-transform duration-500"
                 />
                 <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-4 flex items-center gap-4 animate-bounce-slow">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center animate-heartbeat">
                     <CheckCircle2 className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
@@ -129,16 +129,16 @@ const HomePage = () => {
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
           <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
-            <div className="w-1.5 h-3 bg-white/50 rounded-full" />
+            <div className="w-1.5 h-3 bg-white/50 rounded-full animate-pulse" />
           </div>
         </div>
       </section>
 
       {/* Services Preview */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in-up">
-            <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-green-50">
+            <Badge variant="outline" className="mb-4 text-green-600 border-green-200 bg-green-50 animate-bounce-slow">
               <Leaf className="w-4 h-4 mr-2" /> Our Services
             </Badge>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
@@ -149,9 +149,9 @@ const HomePage = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
-              <Card key={index} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }} data-testid={`service-card-${index}`}>
+              <Card key={index} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 animate-fade-in-up border-0 shadow-lg" style={{ animationDelay: `${index * 0.1}s` }} data-testid={`service-card-${index}`}>
                 <CardContent className="p-6">
-                  <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-green-600 transition-colors">
+                  <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-green-600 group-hover:scale-110 transition-all duration-300">
                     <service.icon className="w-7 h-7 text-green-600 group-hover:text-white transition-colors" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">{service.title}</h3>
