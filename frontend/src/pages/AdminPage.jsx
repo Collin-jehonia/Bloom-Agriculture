@@ -206,19 +206,16 @@ const AdminPage = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 flex items-center justify-center p-4">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-400 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-green-400 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-lime-400 rounded-full blur-3xl" />
         </div>
         
         <Card className="w-full max-w-md relative z-10 animate-fade-in-up">
           <CardHeader className="text-center">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="p-3 bg-emerald-600 rounded-xl">
-                <Leaf className="w-8 h-8 text-white" />
-              </div>
+            <div className="flex items-center justify-center mb-4">
+              <img src={LOGO_URL} alt="Bloom Agriculture Namibia" className="h-20 w-auto" />
             </div>
             <CardTitle className="text-2xl">Admin Portal</CardTitle>
-            <p className="text-gray-500">Bloom Agriculture Namibia</p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
