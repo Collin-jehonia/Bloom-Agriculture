@@ -152,7 +152,7 @@ const Footer = () => {
               <img 
                 src={LOGO_URL} 
                 alt="Bloom Agriculture Namibia" 
-                className="h-16 w-auto brightness-0 invert"
+                className="h-20 md:h-24 w-auto brightness-0 invert"
               />
             </div>
             <p className="text-gray-400 mb-6 max-w-md">
