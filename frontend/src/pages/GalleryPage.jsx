@@ -106,15 +106,15 @@ const GalleryPage = () => {
               {filteredGallery.map((item, index) => (
                 <div
                   key={item.id}
-                  className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer animate-fade-in-up"
-                  style={{ animationDelay: `${index * 0.05}s` }}
+                  className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer animate-fade-in-up hover:shadow-2xl transition-all duration-500"
+                  style={{ animationDelay: `${index * 0.08}s` }}
                   onClick={() => setSelectedImage(item)}
                   data-testid={`gallery-item-${item.id}`}
                 >
                   <img
                     src={item.image_url}
                     alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-4">
