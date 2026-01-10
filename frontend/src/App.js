@@ -149,25 +149,23 @@ const Footer = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-emerald-600 rounded-xl">
-                <Leaf className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <span className="text-xl font-bold">Bloom Agriculture</span>
-                <p className="text-xs text-emerald-400">Namibia CC</p>
-              </div>
+              <img 
+                src={LOGO_URL} 
+                alt="Bloom Agriculture Namibia" 
+                className="h-16 w-auto brightness-0 invert"
+              />
             </div>
             <p className="text-gray-400 mb-6 max-w-md">
               Empowering Namibian farmers with premium agricultural products, expert consultancy, and practical training since 2018.
             </p>
             <div className="flex items-center gap-4">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-emerald-600 transition-colors">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-emerald-600 transition-colors">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-emerald-600 transition-colors">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
             </div>
