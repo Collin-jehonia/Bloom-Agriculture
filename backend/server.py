@@ -1,7 +1,7 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
+from supabase import create_client, Client
 import os
 import logging
 from pathlib import Path
@@ -14,10 +14,11 @@ import hashlib
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# Supabase connection
+SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://wwfhaxdvizqzaqrnusiz.supabase.co')
+SUPABASE_KEY = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3ZmhheGR2aXpxemFxcm51c2l6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM0NTU4NjgsImV4cCI6MjA1OTAzMTg2OH0.q5Q7nPzd-IQfzo30c4MWSoJawF1KB4QBnUsLhNZUDsg')
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -25,13 +26,20 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # ==================== MODELS ====================
 
 class StatusCheck(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class StatusCheckCreate(BaseModel):
     client_name: str
@@ -44,7 +52,7 @@ class GalleryItem(BaseModel):
     description: Optional[str] = ""
     image_url: str
     category: str = "general"
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     is_active: bool = True
 
 class GalleryItemCreate(BaseModel):
@@ -72,7 +80,7 @@ class Event(BaseModel):
     image_url: Optional[str] = ""
     category: str = "workshop"
     is_featured: bool = False
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     is_active: bool = True
 
 class EventCreate(BaseModel):
@@ -104,7 +112,7 @@ class ContactMessage(BaseModel):
     email: str
     phone: Optional[str] = ""
     message: str
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     is_read: bool = False
 
 class ContactMessageCreate(BaseModel):
@@ -123,173 +131,217 @@ class AdminResponse(BaseModel):
     token: Optional[str] = None
     message: str
 
+# ==================== HELPER FUNCTIONS ====================
+
+async def init_tables():
+    """Initialize tables in Supabase if they don't exist"""
+    try:
+        # Check if gallery table exists by trying to query it
+        supabase.table('gallery').select('id').limit(1).execute()
+        logger.info("Gallery table exists")
+    except Exception as e:
+        logger.info(f"Gallery table check: {e}")
+
+    try:
+        supabase.table('events').select('id').limit(1).execute()
+        logger.info("Events table exists")
+    except Exception as e:
+        logger.info(f"Events table check: {e}")
+
+    try:
+        supabase.table('contact_messages').select('id').limit(1).execute()
+        logger.info("Contact messages table exists")
+    except Exception as e:
+        logger.info(f"Contact messages table check: {e}")
+
 # ==================== ROUTES ====================
 
 @api_router.get("/")
 async def root():
-    return {"message": "Bloom Agriculture API"}
+    return {"message": "Bloom Agriculture API - Powered by Supabase"}
 
 # Status Routes
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    await db.status_checks.insert_one(doc)
-    return status_obj
+    status_obj = StatusCheck(client_name=input.client_name)
+    try:
+        result = supabase.table('status_checks').insert(status_obj.model_dump()).execute()
+        return status_obj
+    except Exception as e:
+        logger.error(f"Error creating status check: {e}")
+        return status_obj
 
-@api_router.get("/status", response_model=List[StatusCheck])
+@api_router.get("/status")
 async def get_status_checks():
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    return status_checks
+    try:
+        result = supabase.table('status_checks').select('*').execute()
+        return result.data
+    except Exception as e:
+        logger.error(f"Error fetching status checks: {e}")
+        return []
 
 # ==================== GALLERY ROUTES ====================
 
-@api_router.get("/gallery", response_model=List[GalleryItem])
+@api_router.get("/gallery")
 async def get_gallery_items(category: Optional[str] = None, active_only: bool = True):
-    query = {}
-    if category:
-        query["category"] = category
-    if active_only:
-        query["is_active"] = True
-    
-    items = await db.gallery.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
-    for item in items:
-        if isinstance(item.get('created_at'), str):
-            item['created_at'] = datetime.fromisoformat(item['created_at'])
-    return items
+    try:
+        query = supabase.table('gallery').select('*')
+        if category:
+            query = query.eq('category', category)
+        if active_only:
+            query = query.eq('is_active', True)
+        result = query.order('created_at', desc=True).execute()
+        return result.data
+    except Exception as e:
+        logger.error(f"Error fetching gallery: {e}")
+        return []
 
-@api_router.get("/gallery/{item_id}", response_model=GalleryItem)
+@api_router.get("/gallery/{item_id}")
 async def get_gallery_item(item_id: str):
-    item = await db.gallery.find_one({"id": item_id}, {"_id": 0})
-    if not item:
+    try:
+        result = supabase.table('gallery').select('*').eq('id', item_id).single().execute()
+        return result.data
+    except Exception as e:
+        logger.error(f"Error fetching gallery item: {e}")
         raise HTTPException(status_code=404, detail="Gallery item not found")
-    if isinstance(item.get('created_at'), str):
-        item['created_at'] = datetime.fromisoformat(item['created_at'])
-    return item
 
 @api_router.post("/gallery", response_model=GalleryItem)
 async def create_gallery_item(input: GalleryItemCreate):
     item = GalleryItem(**input.model_dump())
-    doc = item.model_dump()
-    doc['created_at'] = doc['created_at'].isoformat()
-    await db.gallery.insert_one(doc)
-    return item
+    try:
+        result = supabase.table('gallery').insert(item.model_dump()).execute()
+        return item
+    except Exception as e:
+        logger.error(f"Error creating gallery item: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.put("/gallery/{item_id}", response_model=GalleryItem)
+@api_router.put("/gallery/{item_id}")
 async def update_gallery_item(item_id: str, input: GalleryItemUpdate):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
     if not update_data:
         raise HTTPException(status_code=400, detail="No update data provided")
     
-    result = await db.gallery.update_one({"id": item_id}, {"$set": update_data})
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Gallery item not found")
-    
-    item = await db.gallery.find_one({"id": item_id}, {"_id": 0})
-    if isinstance(item.get('created_at'), str):
-        item['created_at'] = datetime.fromisoformat(item['created_at'])
-    return item
+    try:
+        result = supabase.table('gallery').update(update_data).eq('id', item_id).execute()
+        if not result.data:
+            raise HTTPException(status_code=404, detail="Gallery item not found")
+        return result.data[0]
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating gallery item: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.delete("/gallery/{item_id}")
 async def delete_gallery_item(item_id: str):
-    result = await db.gallery.delete_one({"id": item_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Gallery item not found")
-    return {"message": "Gallery item deleted successfully"}
+    try:
+        result = supabase.table('gallery').delete().eq('id', item_id).execute()
+        return {"message": "Gallery item deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting gallery item: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # ==================== EVENT ROUTES ====================
 
-@api_router.get("/events", response_model=List[Event])
+@api_router.get("/events")
 async def get_events(category: Optional[str] = None, featured_only: bool = False, active_only: bool = True):
-    query = {}
-    if category:
-        query["category"] = category
-    if featured_only:
-        query["is_featured"] = True
-    if active_only:
-        query["is_active"] = True
-    
-    events = await db.events.find(query, {"_id": 0}).sort("date", 1).to_list(1000)
-    for event in events:
-        if isinstance(event.get('created_at'), str):
-            event['created_at'] = datetime.fromisoformat(event['created_at'])
-    return events
+    try:
+        query = supabase.table('events').select('*')
+        if category:
+            query = query.eq('category', category)
+        if featured_only:
+            query = query.eq('is_featured', True)
+        if active_only:
+            query = query.eq('is_active', True)
+        result = query.order('date', desc=False).execute()
+        return result.data
+    except Exception as e:
+        logger.error(f"Error fetching events: {e}")
+        return []
 
-@api_router.get("/events/{event_id}", response_model=Event)
+@api_router.get("/events/{event_id}")
 async def get_event(event_id: str):
-    event = await db.events.find_one({"id": event_id}, {"_id": 0})
-    if not event:
+    try:
+        result = supabase.table('events').select('*').eq('id', event_id).single().execute()
+        return result.data
+    except Exception as e:
+        logger.error(f"Error fetching event: {e}")
         raise HTTPException(status_code=404, detail="Event not found")
-    if isinstance(event.get('created_at'), str):
-        event['created_at'] = datetime.fromisoformat(event['created_at'])
-    return event
 
 @api_router.post("/events", response_model=Event)
 async def create_event(input: EventCreate):
     event = Event(**input.model_dump())
-    doc = event.model_dump()
-    doc['created_at'] = doc['created_at'].isoformat()
-    await db.events.insert_one(doc)
-    return event
+    try:
+        result = supabase.table('events').insert(event.model_dump()).execute()
+        return event
+    except Exception as e:
+        logger.error(f"Error creating event: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.put("/events/{event_id}", response_model=Event)
+@api_router.put("/events/{event_id}")
 async def update_event(event_id: str, input: EventUpdate):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
     if not update_data:
         raise HTTPException(status_code=400, detail="No update data provided")
     
-    result = await db.events.update_one({"id": event_id}, {"$set": update_data})
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Event not found")
-    
-    event = await db.events.find_one({"id": event_id}, {"_id": 0})
-    if isinstance(event.get('created_at'), str):
-        event['created_at'] = datetime.fromisoformat(event['created_at'])
-    return event
+    try:
+        result = supabase.table('events').update(update_data).eq('id', event_id).execute()
+        if not result.data:
+            raise HTTPException(status_code=404, detail="Event not found")
+        return result.data[0]
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating event: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.delete("/events/{event_id}")
 async def delete_event(event_id: str):
-    result = await db.events.delete_one({"id": event_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Event not found")
-    return {"message": "Event deleted successfully"}
+    try:
+        result = supabase.table('events').delete().eq('id', event_id).execute()
+        return {"message": "Event deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting event: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # ==================== CONTACT ROUTES ====================
 
 @api_router.post("/contact", response_model=ContactMessage)
 async def create_contact_message(input: ContactMessageCreate):
     message = ContactMessage(**input.model_dump())
-    doc = message.model_dump()
-    doc['created_at'] = doc['created_at'].isoformat()
-    await db.contact_messages.insert_one(doc)
-    return message
+    try:
+        result = supabase.table('contact_messages').insert(message.model_dump()).execute()
+        return message
+    except Exception as e:
+        logger.error(f"Error creating contact message: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.get("/contact", response_model=List[ContactMessage])
+@api_router.get("/contact")
 async def get_contact_messages():
-    messages = await db.contact_messages.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
-    for msg in messages:
-        if isinstance(msg.get('created_at'), str):
-            msg['created_at'] = datetime.fromisoformat(msg['created_at'])
-    return messages
+    try:
+        result = supabase.table('contact_messages').select('*').order('created_at', desc=True).execute()
+        return result.data
+    except Exception as e:
+        logger.error(f"Error fetching contact messages: {e}")
+        return []
 
 @api_router.put("/contact/{message_id}/read")
 async def mark_message_read(message_id: str):
-    result = await db.contact_messages.update_one({"id": message_id}, {"$set": {"is_read": True}})
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Message not found")
-    return {"message": "Message marked as read"}
+    try:
+        result = supabase.table('contact_messages').update({"is_read": True}).eq('id', message_id).execute()
+        return {"message": "Message marked as read"}
+    except Exception as e:
+        logger.error(f"Error marking message as read: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.delete("/contact/{message_id}")
 async def delete_contact_message(message_id: str):
-    result = await db.contact_messages.delete_one({"id": message_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Message not found")
-    return {"message": "Message deleted successfully"}
+    try:
+        result = supabase.table('contact_messages').delete().eq('id', message_id).execute()
+        return {"message": "Message deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting contact message: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # ==================== ADMIN AUTH ====================
 
@@ -308,17 +360,26 @@ async def admin_login(credentials: AdminLogin):
 
 @api_router.get("/admin/stats")
 async def get_admin_stats():
-    gallery_count = await db.gallery.count_documents({"is_active": True})
-    events_count = await db.events.count_documents({"is_active": True})
-    messages_count = await db.contact_messages.count_documents({})
-    unread_messages = await db.contact_messages.count_documents({"is_read": False})
-    
-    return {
-        "gallery_count": gallery_count,
-        "events_count": events_count,
-        "messages_count": messages_count,
-        "unread_messages": unread_messages
-    }
+    try:
+        gallery_result = supabase.table('gallery').select('id', count='exact').eq('is_active', True).execute()
+        events_result = supabase.table('events').select('id', count='exact').eq('is_active', True).execute()
+        messages_result = supabase.table('contact_messages').select('id', count='exact').execute()
+        unread_result = supabase.table('contact_messages').select('id', count='exact').eq('is_read', False).execute()
+        
+        return {
+            "gallery_count": gallery_result.count or 0,
+            "events_count": events_result.count or 0,
+            "messages_count": messages_result.count or 0,
+            "unread_messages": unread_result.count or 0
+        }
+    except Exception as e:
+        logger.error(f"Error fetching admin stats: {e}")
+        return {
+            "gallery_count": 0,
+            "events_count": 0,
+            "messages_count": 0,
+            "unread_messages": 0
+        }
 
 # ==================== SEED DATA ====================
 
@@ -326,10 +387,13 @@ async def get_admin_stats():
 async def seed_database():
     """Seed the database with initial gallery and events data"""
     
-    # Check if already seeded
-    gallery_count = await db.gallery.count_documents({})
-    if gallery_count > 0:
-        return {"message": "Database already seeded"}
+    try:
+        # Check if already seeded
+        gallery_check = supabase.table('gallery').select('id').limit(1).execute()
+        if gallery_check.data and len(gallery_check.data) > 0:
+            return {"message": "Database already seeded"}
+    except Exception as e:
+        logger.info(f"Table check during seed: {e}")
     
     # Seed Gallery
     gallery_items = [
@@ -346,7 +410,7 @@ async def seed_database():
             "id": str(uuid.uuid4()),
             "title": "Irrigation System Installation",
             "description": "Modern pivot irrigation system installed at a local farm",
-            "image_url": "https://images.unsplash.com/photo-1689349483530-bb7a0734d9fb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxpcnJpZ2F0aW9uJTIwc3lzdGVtcyUyMGZhcm1pbmd8ZW58MHx8fHwxNzY4MDc5MDQ0fDA&ixlib=rb-4.1.0&q=85",
+            "image_url": "https://images.unsplash.com/photo-1689349483530-bb7a0734d9fb",
             "category": "projects",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "is_active": True
@@ -355,7 +419,7 @@ async def seed_database():
             "id": str(uuid.uuid4()),
             "title": "Farmer Training Workshop",
             "description": "Practical training session with local farmers",
-            "image_url": "https://images.unsplash.com/photo-1746014929708-fcb859fd3185?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85",
+            "image_url": "https://images.unsplash.com/photo-1746014929708-fcb859fd3185",
             "category": "training",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "is_active": True
@@ -373,7 +437,7 @@ async def seed_database():
             "id": str(uuid.uuid4()),
             "title": "Soil Analysis Service",
             "description": "Our team conducting comprehensive soil analysis",
-            "image_url": "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=2187&q=80",
+            "image_url": "https://images.unsplash.com/photo-1605000797499-95a51c5269ae",
             "category": "services",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "is_active": True
@@ -382,7 +446,7 @@ async def seed_database():
             "id": str(uuid.uuid4()),
             "title": "Farm Consultancy Visit",
             "description": "Expert consultation at a local agricultural project",
-            "image_url": "https://images.unsplash.com/photo-1744726010540-bf318d4a691f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njd8MHwxfHNlYXJjaHw0fHxhZ3JpY3VsdHVyYWwlMjBjb25zdWx0YW5jeXxlbnwwfHx8fDE3NjgwNzkwMzl8MA&ixlib=rb-4.1.0&q=85",
+            "image_url": "https://images.unsplash.com/photo-1744726010540-bf318d4a691f",
             "category": "services",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "is_active": True
@@ -391,7 +455,7 @@ async def seed_database():
             "id": str(uuid.uuid4()),
             "title": "Green Fields of Namibia",
             "description": "Beautiful farmland showing sustainable agricultural practices",
-            "image_url": "https://images.unsplash.com/photo-1741874299706-2b8e16839aaa?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHw0fHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85",
+            "image_url": "https://images.unsplash.com/photo-1741874299706-2b8e16839aaa",
             "category": "farms",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "is_active": True
@@ -400,14 +464,12 @@ async def seed_database():
             "id": str(uuid.uuid4()),
             "title": "Sprinkler Irrigation",
             "description": "Efficient water management with modern sprinkler systems",
-            "image_url": "https://images.unsplash.com/photo-1738598665698-7fd7af4b5e0c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHw0fHxpcnJpZ2F0aW9uJTIwc3lzdGVtcyUyMGZhcm1pbmd8ZW58MHx8fHwxNzY4MDc5MDQ0fDA&ixlib=rb-4.1.0&q=85",
+            "image_url": "https://images.unsplash.com/photo-1738598665698-7fd7af4b5e0c",
             "category": "projects",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "is_active": True
         }
     ]
-    
-    await db.gallery.insert_many(gallery_items)
     
     # Seed Events
     events = [
@@ -418,7 +480,7 @@ async def seed_database():
             "date": "2025-09-15",
             "time": "09:00 AM - 4:00 PM",
             "location": "Windhoek Agricultural Center, Namibia",
-            "image_url": "https://images.unsplash.com/photo-1746014929708-fcb859fd3185?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85",
+            "image_url": "https://images.unsplash.com/photo-1746014929708-fcb859fd3185",
             "category": "workshop",
             "is_featured": True,
             "created_at": datetime.now(timezone.utc).isoformat(),
@@ -431,7 +493,7 @@ async def seed_database():
             "date": "2025-10-05",
             "time": "10:00 AM - 2:00 PM",
             "location": "Bloom Agriculture Office, Windhoek",
-            "image_url": "https://images.unsplash.com/photo-1689349483530-bb7a0734d9fb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxpcnJpZ2F0aW9uJTIwc3lzdGVtcyUyMGZhcm1pbmd8ZW58MHx8fHwxNzY4MDc5MDQ0fDA&ixlib=rb-4.1.0&q=85",
+            "image_url": "https://images.unsplash.com/photo-1689349483530-bb7a0734d9fb",
             "category": "seminar",
             "is_featured": True,
             "created_at": datetime.now(timezone.utc).isoformat(),
@@ -457,7 +519,7 @@ async def seed_database():
             "date": "2025-08-28",
             "time": "07:00 AM - 12:00 PM",
             "location": "Various locations across Namibia",
-            "image_url": "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=2187&q=80",
+            "image_url": "https://images.unsplash.com/photo-1605000797499-95a51c5269ae",
             "category": "workshop",
             "is_featured": False,
             "created_at": datetime.now(timezone.utc).isoformat(),
@@ -465,9 +527,83 @@ async def seed_database():
         }
     ]
     
-    await db.events.insert_many(events)
+    try:
+        # Insert gallery items
+        for item in gallery_items:
+            try:
+                supabase.table('gallery').insert(item).execute()
+            except Exception as e:
+                logger.error(f"Error inserting gallery item: {e}")
+        
+        # Insert events
+        for event in events:
+            try:
+                supabase.table('events').insert(event).execute()
+            except Exception as e:
+                logger.error(f"Error inserting event: {e}")
+        
+        return {"message": "Database seeded successfully", "gallery_items": len(gallery_items), "events": len(events)}
+    except Exception as e:
+        logger.error(f"Error seeding database: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ==================== TABLE CREATION ENDPOINT ====================
+
+@api_router.post("/init-tables")
+async def initialize_tables():
+    """Initialize required tables in Supabase"""
+    sql_statements = """
+    -- Note: Run these SQL statements in Supabase SQL Editor
     
-    return {"message": "Database seeded successfully", "gallery_items": len(gallery_items), "events": len(events)}
+    -- Gallery table
+    CREATE TABLE IF NOT EXISTS gallery (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        description TEXT,
+        image_url TEXT NOT NULL,
+        category TEXT DEFAULT 'general',
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        is_active BOOLEAN DEFAULT TRUE
+    );
+
+    -- Events table
+    CREATE TABLE IF NOT EXISTS events (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        date TEXT NOT NULL,
+        time TEXT NOT NULL,
+        location TEXT NOT NULL,
+        image_url TEXT,
+        category TEXT DEFAULT 'workshop',
+        is_featured BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        is_active BOOLEAN DEFAULT TRUE
+    );
+
+    -- Contact messages table
+    CREATE TABLE IF NOT EXISTS contact_messages (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT,
+        message TEXT NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        is_read BOOLEAN DEFAULT FALSE
+    );
+
+    -- Status checks table
+    CREATE TABLE IF NOT EXISTS status_checks (
+        id TEXT PRIMARY KEY,
+        client_name TEXT NOT NULL,
+        timestamp TIMESTAMPTZ DEFAULT NOW()
+    );
+    """
+    
+    return {
+        "message": "Please run these SQL statements in Supabase SQL Editor",
+        "sql": sql_statements
+    }
 
 # Include the router in the main app
 app.include_router(api_router)
@@ -475,18 +611,12 @@ app.include_router(api_router)
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Starting Bloom Agriculture API with Supabase")
+    await init_tables()
