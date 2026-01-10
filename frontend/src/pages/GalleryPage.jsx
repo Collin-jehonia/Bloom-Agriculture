@@ -70,16 +70,17 @@ const GalleryPage = () => {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Category Filter */}
-          <div className="flex flex-wrap gap-3 justify-center mb-12 animate-fade-in-up">
-            {categories.map((category) => (
+          <div className="flex flex-wrap gap-3 justify-center mb-12 animate-fade-in-down">
+            {categories.map((category, index) => (
               <Button
                 key={category.id}
                 variant={selectedCategory === category.id ? "default" : "outline"}
-                className={`rounded-full ${
+                className={`rounded-full transition-all duration-300 hover:scale-105 ${
                   selectedCategory === category.id 
-                    ? 'bg-green-600 hover:bg-green-700 text-white' 
+                    ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg' 
                     : 'border-green-200 text-green-700 hover:bg-green-50'
                 }`}
+                style={{ animationDelay: `${index * 0.05}s` }}
                 onClick={() => setSelectedCategory(category.id)}
                 data-testid={`gallery-filter-${category.id}`}
               >
