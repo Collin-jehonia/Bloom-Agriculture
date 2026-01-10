@@ -213,7 +213,7 @@ const AdminPage = () => {
         <Card className="w-full max-w-md relative z-10 animate-fade-in-up">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <img src={LOGO_URL} alt="Bloom Agriculture Namibia" className="h-20 w-auto" />
+              <img src={LOGO_URL} alt="Bloom Agriculture Namibia" className="h-24 w-auto" />
             </div>
             <CardTitle className="text-2xl">Admin Portal</CardTitle>
           </CardHeader>
