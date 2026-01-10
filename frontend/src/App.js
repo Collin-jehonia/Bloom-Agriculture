@@ -223,26 +223,6 @@ const Navigation = () => {
     </nav>
   );
 };
-                    to={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-lg font-medium text-gray-700 hover:text-green-600"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-                <Link to="/contact" onClick={() => setMobileOpen(false)}>
-                  <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full mt-4 w-full">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
-    </nav>
-  );
-};
 
 // Footer Component
 const Footer = () => {
