@@ -56,6 +56,7 @@ const LOGO_URL = "https://customer-assets.emergentagent.com/job_bloom-redesign-1
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeHover, setActiveHover] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -65,71 +66,155 @@ const Navigation = () => {
   }, []);
 
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Services", href: "/services" },
-    { name: "Gallery", href: "/gallery" },
-    { name: "Events", href: "/events" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "/", icon: "🏠" },
+    { name: "About", href: "/about", icon: "ℹ️" },
+    { name: "Services", href: "/services", icon: "⚙️" },
+    { name: "Gallery", href: "/gallery", icon: "🖼️" },
+    { name: "Events", href: "/events", icon: "📅" },
+    { name: "Contact", href: "/contact", icon: "📞" },
   ];
 
   const isHomePage = location.pathname === "/";
-  const navBg = isScrolled || !isHomePage ? "bg-white/95 backdrop-blur-md shadow-lg" : "bg-transparent";
-  const textColor = isScrolled || !isHomePage ? "text-gray-700" : "text-white/90";
+  const isTransparent = !isScrolled && isHomePage;
 
   return (
-    <nav data-testid="navigation" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}>
+    <nav 
+      data-testid="navigation" 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isTransparent 
+          ? "bg-transparent" 
+          : "bg-white/80 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border-b border-gray-100/50"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center gap-2">
-            <img 
-              src={LOGO_URL} 
-              alt="Bloom Agriculture Namibia" 
-              className={`h-16 md:h-20 w-auto transition-all ${!isScrolled && isHomePage ? 'brightness-0 invert' : ''}`}
-            />
+        <div className="flex items-center justify-between h-20 md:h-24">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className={`relative transition-all duration-300 ${isTransparent ? '' : 'hover:scale-105'}`}>
+              <img 
+                src={LOGO_URL} 
+                alt="Bloom Agriculture Namibia" 
+                className={`h-14 md:h-16 lg:h-20 w-auto transition-all duration-300 ${
+                  isTransparent ? 'brightness-0 invert drop-shadow-lg' : ''
+                }`}
+              />
+            </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className={`font-medium transition-colors hover:text-green-500 ${textColor} ${location.pathname === link.href ? 'text-green-500' : ''}`}
-                data-testid={`nav-${link.name.toLowerCase()}`}
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center">
+            <div className={`flex items-center gap-1 p-1.5 rounded-full transition-all duration-300 ${
+              isTransparent 
+                ? "bg-white/10 backdrop-blur-md border border-white/20" 
+                : "bg-gray-100/80"
+            }`}>
+              {navLinks.map((link) => {
+                const isActive = location.pathname === link.href;
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    onMouseEnter={() => setActiveHover(link.name)}
+                    onMouseLeave={() => setActiveHover(null)}
+                    className={`relative px-4 py-2.5 rounded-full font-medium text-sm transition-all duration-300 ${
+                      isActive 
+                        ? isTransparent 
+                          ? "bg-white text-green-700 shadow-lg" 
+                          : "bg-green-600 text-white shadow-lg shadow-green-600/30"
+                        : isTransparent 
+                          ? "text-white/90 hover:bg-white/20" 
+                          : "text-gray-600 hover:bg-gray-200/80 hover:text-gray-900"
+                    }`}
+                    data-testid={`nav-${link.name.toLowerCase()}`}
+                  >
+                    <span className="relative z-10">{link.name}</span>
+                    {activeHover === link.name && !isActive && (
+                      <span className={`absolute inset-0 rounded-full animate-pulse ${
+                        isTransparent ? "bg-white/10" : "bg-green-100/50"
+                      }`} />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* CTA Button */}
+            <Link to="/contact" className="ml-4">
+              <Button 
+                className={`relative overflow-hidden rounded-full px-6 py-2.5 font-semibold text-sm transition-all duration-300 hover:scale-105 hover:shadow-xl ${
+                  isTransparent 
+                    ? "bg-white text-green-700 hover:bg-green-50 shadow-lg shadow-white/25" 
+                    : "bg-gradient-to-r from-green-600 to-green-500 text-white hover:from-green-700 hover:to-green-600 shadow-lg shadow-green-600/30"
+                }`}
+                data-testid="nav-get-started"
               >
-                {link.name}
-              </Link>
-            ))}
-            <Link to="/contact">
-              <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full px-6" data-testid="nav-get-started">
-                Get Started
+                <span className="relative z-10 flex items-center gap-2">
+                  Get Started
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </span>
               </Button>
             </Link>
           </div>
 
+          {/* Mobile Menu Button */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon" className={isScrolled || !isHomePage ? 'text-gray-900' : 'text-white'}>
+            <SheetTrigger asChild className="lg:hidden">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={`relative w-12 h-12 rounded-full transition-all duration-300 ${
+                  isTransparent 
+                    ? "text-white hover:bg-white/20" 
+                    : "text-gray-900 hover:bg-gray-100"
+                }`}
+              >
                 <Menu className="w-6 h-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-72 bg-white">
-              <div className="flex flex-col gap-6 mt-8">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    to={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-lg font-medium text-gray-700 hover:text-green-600"
-                  >
-                    {link.name}
+            <SheetContent side="right" className="w-80 bg-white/95 backdrop-blur-xl border-l border-gray-200/50 p-0">
+              <div className="flex flex-col h-full">
+                {/* Mobile Header */}
+                <div className="p-6 border-b border-gray-100">
+                  <img src={LOGO_URL} alt="Bloom Agriculture" className="h-12 w-auto" />
+                </div>
+                
+                {/* Mobile Nav Links */}
+                <div className="flex-1 py-6 px-4 space-y-2">
+                  {navLinks.map((link, index) => {
+                    const isActive = location.pathname === link.href;
+                    return (
+                      <Link
+                        key={link.name}
+                        to={link.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`flex items-center gap-4 px-4 py-4 rounded-2xl font-medium transition-all duration-300 animate-fade-in-left ${
+                          isActive 
+                            ? "bg-green-600 text-white shadow-lg shadow-green-600/30" 
+                            : "text-gray-700 hover:bg-gray-100 hover:translate-x-2"
+                        }`}
+                        style={{ animationDelay: `${index * 0.05}s` }}
+                      >
+                        <span className="text-xl">{link.icon}</span>
+                        <span>{link.name}</span>
+                        {isActive && <ChevronRight className="w-5 h-5 ml-auto" />}
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                {/* Mobile Footer */}
+                <div className="p-6 border-t border-gray-100 space-y-4">
+                  <Link to="/contact" onClick={() => setMobileOpen(false)}>
+                    <Button className="w-full bg-gradient-to-r from-green-600 to-green-500 text-white rounded-2xl py-6 font-semibold shadow-lg shadow-green-600/30 hover:shadow-xl transition-all">
+                      Get Started
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
                   </Link>
-                ))}
-                <Link to="/contact" onClick={() => setMobileOpen(false)}>
-                  <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full mt-4 w-full">
-                    Get Started
-                  </Button>
-                </Link>
+                  <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                    <Phone className="w-4 h-4" />
+                    <a href="tel:0813228282" className="hover:text-green-600">081 322 8282</a>
+                  </div>
+                </div>
               </div>
             </SheetContent>
           </Sheet>
