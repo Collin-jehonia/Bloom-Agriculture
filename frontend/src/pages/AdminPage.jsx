@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Leaf, LogOut, Plus, Trash2, Edit, Eye, MessageSquare, LayoutDashboard,
-  Images, CalendarDays, Settings, X, Save, CheckCircle2, AlertCircle, Menu, Database
+  Images, CalendarDays, Settings, X, Save, CheckCircle2, AlertCircle, Menu, Database, Upload, Image, Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { galleryService, eventsService, contactService, adminService, seedDatabase } from "@/lib/supabase";
+import { galleryService, eventsService, contactService, adminService, seedDatabase, storageService, settingsService, servicesService } from "@/lib/supabase";
 
 // Logo URL
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_bloom-redesign-1/artifacts/q2u8vu9s_image.png";
@@ -40,6 +40,11 @@ const AdminPage = () => {
 
   const [galleryForm, setGalleryForm] = useState({ title: "", description: "", image_url: "", category: "general" });
   const [eventForm, setEventForm] = useState({ title: "", description: "", date: "", time: "", location: "", image_url: "", category: "workshop", is_featured: false });
+  const [siteSettings, setSiteSettings] = useState({ hero_image: "", hero_side_image: "" });
+  const [isUploading, setIsUploading] = useState(false);
+  const [services, setServices] = useState([]);
+  const [showServiceModal, setShowServiceModal] = useState(false);
+  const [serviceForm, setServiceForm] = useState({ title: "", description: "", image_url: "", icon: "Sprout", features: "", sort_order: 0 });
 
   useEffect(() => {
     if (token) {
@@ -50,18 +55,51 @@ const AdminPage = () => {
 
   const fetchAllData = async () => {
     try {
-      const [statsData, galleryData, eventsData, messagesData] = await Promise.all([
+      const [statsData, galleryData, eventsData, messagesData, settingsData, servicesData] = await Promise.all([
         adminService.getStats(),
         galleryService.getAll(null, false),
         eventsService.getAll(null, false, false),
-        contactService.getAll()
+        contactService.getAll(),
+        settingsService.get(),
+        servicesService.getAllAdmin()
       ]);
       setStats(statsData);
       setGallery(galleryData);
       setEvents(eventsData);
       setMessages(messagesData);
+      setSiteSettings(settingsData);
+      setServices(servicesData);
     } catch (error) {
       console.error('Error fetching data:', error);
+    }
+  };
+
+  // Image upload handler
+  const handleImageUpload = async (file, onSuccess) => {
+    if (!file) return;
+    setIsUploading(true);
+    try {
+      const url = await storageService.uploadImage(file);
+      onSuccess(url);
+      showNotification("Image uploaded successfully");
+    } catch (error) {
+      console.error('Upload error:', error);
+      showNotification("Failed to upload image", "error");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Save site settings
+  const handleSaveSettings = async () => {
+    setIsSaving(true);
+    try {
+      await settingsService.update(siteSettings);
+      showNotification("Settings saved successfully");
+    } catch (error) {
+      showNotification("Failed to save settings", "error");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -192,6 +230,56 @@ const AdminPage = () => {
     }
   };
 
+  // Service CRUD
+  const handleSaveService = async () => {
+    setIsSaving(true);
+    try {
+      const serviceData = {
+        ...serviceForm,
+        features: serviceForm.features.split('\n').filter(f => f.trim())
+      };
+      if (editingItem) {
+        await servicesService.update(editingItem.id, serviceData);
+        showNotification("Service updated successfully");
+      } else {
+        await servicesService.create(serviceData);
+        showNotification("Service added successfully");
+      }
+      setShowServiceModal(false);
+      setEditingItem(null);
+      setServiceForm({ title: "", description: "", image_url: "", icon: "Sprout", features: "", sort_order: 0 });
+      fetchAllData();
+    } catch (error) {
+      showNotification("Failed to save service", "error");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeleteService = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this service?")) return;
+    try {
+      await servicesService.delete(id);
+      showNotification("Service deleted");
+      fetchAllData();
+    } catch (error) {
+      showNotification("Failed to delete service", "error");
+    }
+  };
+
+  const editServiceItem = (item) => {
+    setEditingItem(item);
+    setServiceForm({
+      title: item.title,
+      description: item.description,
+      image_url: item.image_url || "",
+      icon: item.icon || "Sprout",
+      features: Array.isArray(item.features) ? item.features.join('\n') : "",
+      sort_order: item.sort_order || 0
+    });
+    setShowServiceModal(true);
+  };
+
   // Seed Data
   const handleSeedData = async () => {
     try {
@@ -317,11 +405,17 @@ const AdminPage = () => {
             <TabsTrigger value="events" className="rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white">
               <CalendarDays className="w-4 h-4 mr-2" /> Events
             </TabsTrigger>
+            <TabsTrigger value="services" className="rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white">
+              <Briefcase className="w-4 h-4 mr-2" /> Services
+            </TabsTrigger>
             <TabsTrigger value="messages" className="rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white">
               <MessageSquare className="w-4 h-4 mr-2" /> Messages
               {stats.unread_messages > 0 && (
                 <Badge className="ml-2 bg-red-500 text-white">{stats.unread_messages}</Badge>
               )}
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="rounded-lg data-[state=active]:bg-green-600 data-[state=active]:text-white">
+              <Settings className="w-4 h-4 mr-2" /> Settings
             </TabsTrigger>
           </TabsList>
 
@@ -470,6 +564,47 @@ const AdminPage = () => {
             </div>
           </TabsContent>
 
+          {/* Services Tab */}
+          <TabsContent value="services" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">Services Management</h2>
+              <Button onClick={() => { setEditingItem(null); setServiceForm({ title: "", description: "", image_url: "", icon: "Sprout", features: "", sort_order: services.length }); setShowServiceModal(true); }} className="bg-green-600 hover:bg-green-700">
+                <Plus className="w-4 h-4 mr-2" /> Add Service
+              </Button>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {services.map((service) => (
+                <Card key={service.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="relative h-40">
+                    <img src={service.image_url || 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae'} alt={service.title} className="w-full h-full object-cover" />
+                    <Badge className="absolute top-2 left-2 bg-green-600">Order: {service.sort_order}</Badge>
+                  </div>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold text-gray-900">{service.title}</h3>
+                    <p className="text-sm text-gray-500 line-clamp-2">{service.description}</p>
+                    <div className="flex gap-2 mt-4">
+                      <Button size="sm" variant="outline" onClick={() => editServiceItem(service)}>
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button size="sm" variant="outline" className="text-red-600 hover:bg-red-50" onClick={() => handleDeleteService(service.id)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {services.length === 0 && (
+              <Card>
+                <CardContent className="p-8 text-center text-gray-500">
+                  No services yet. Add your first service or load sample data.
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
           {/* Messages Tab */}
           <TabsContent value="messages" className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-900">Contact Messages</h2>
@@ -507,6 +642,66 @@ const AdminPage = () => {
               )}
             </div>
           </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900">Homepage Settings</h2>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Image className="w-5 h-5" /> Hero Section Images
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Hero Background Image */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Hero Background Image</label>
+                  <div className="flex gap-4">
+                    <input
+                      type="text"
+                      value={siteSettings.hero_image || ""}
+                      onChange={(e) => setSiteSettings({ ...siteSettings, hero_image: e.target.value })}
+                      className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none"
+                      placeholder="Image URL or upload"
+                    />
+                    <input type="file" id="hero-upload" accept="image/*" className="hidden" onChange={(e) => { handleImageUpload(e.target.files[0], (url) => setSiteSettings({ ...siteSettings, hero_image: url })); e.target.value = ''; }} />
+                    <Button type="button" variant="outline" disabled={isUploading} onClick={() => document.getElementById('hero-upload').click()}>
+                      <Upload className="w-4 h-4 mr-2" /> {isUploading ? "Uploading..." : "Upload"}
+                    </Button>
+                  </div>
+                  {siteSettings.hero_image && (
+                    <img src={siteSettings.hero_image} alt="Hero preview" className="mt-3 h-32 w-full object-cover rounded-xl" />
+                  )}
+                </div>
+
+                {/* Hero Side Image */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Hero Side Image (Farmer Photo)</label>
+                  <div className="flex gap-4">
+                    <input
+                      type="text"
+                      value={siteSettings.hero_side_image || ""}
+                      onChange={(e) => setSiteSettings({ ...siteSettings, hero_side_image: e.target.value })}
+                      className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none"
+                      placeholder="Image URL or upload"
+                    />
+                    <input type="file" id="side-upload" accept="image/*" className="hidden" onChange={(e) => { handleImageUpload(e.target.files[0], (url) => setSiteSettings({ ...siteSettings, hero_side_image: url })); e.target.value = ''; }} />
+                    <Button type="button" variant="outline" disabled={isUploading} onClick={() => document.getElementById('side-upload').click()}>
+                      <Upload className="w-4 h-4 mr-2" /> {isUploading ? "Uploading..." : "Upload"}
+                    </Button>
+                  </div>
+                  {siteSettings.hero_side_image && (
+                    <img src={siteSettings.hero_side_image} alt="Side preview" className="mt-3 h-32 w-48 object-cover rounded-xl" />
+                  )}
+                </div>
+
+                <Button onClick={handleSaveSettings} disabled={isSaving} className="bg-green-600 hover:bg-green-700">
+                  {isSaving ? "Saving..." : <><Save className="w-4 h-4 mr-2" /> Save Settings</>}
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </main>
 
@@ -522,8 +717,15 @@ const AdminPage = () => {
               <input type="text" value={galleryForm.title} onChange={(e) => setGalleryForm({ ...galleryForm, title: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="Enter title" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Image URL *</label>
-              <input type="url" value={galleryForm.image_url} onChange={(e) => setGalleryForm({ ...galleryForm, image_url: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="https://example.com/image.jpg" required />
+              <label className="block text-sm font-medium text-gray-700 mb-2">Image *</label>
+              <div className="flex gap-2">
+                <input type="url" value={galleryForm.image_url} onChange={(e) => setGalleryForm({ ...galleryForm, image_url: e.target.value })} className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="Image URL or upload" required />
+                <input type="file" id="gallery-upload" accept="image/*" className="hidden" onChange={(e) => { handleImageUpload(e.target.files[0], (url) => setGalleryForm({ ...galleryForm, image_url: url })); e.target.value = ''; }} />
+                <Button type="button" variant="outline" disabled={isUploading} className="px-4" onClick={() => document.getElementById('gallery-upload').click()}>
+                  <Upload className="w-4 h-4" />
+                </Button>
+              </div>
+              {isUploading && <p className="text-sm text-gray-500 mt-1">Uploading...</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
@@ -582,8 +784,15 @@ const AdminPage = () => {
               <input type="text" value={eventForm.location} onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="Event location" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
-              <input type="url" value={eventForm.image_url} onChange={(e) => setEventForm({ ...eventForm, image_url: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="https://example.com/image.jpg" />
+              <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
+              <div className="flex gap-2">
+                <input type="url" value={eventForm.image_url} onChange={(e) => setEventForm({ ...eventForm, image_url: e.target.value })} className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="Image URL or upload" />
+                <input type="file" id="event-upload" accept="image/*" className="hidden" onChange={(e) => { handleImageUpload(e.target.files[0], (url) => setEventForm({ ...eventForm, image_url: url })); e.target.value = ''; }} />
+                <Button type="button" variant="outline" disabled={isUploading} className="px-4" onClick={() => document.getElementById('event-upload').click()}>
+                  <Upload className="w-4 h-4" />
+                </Button>
+              </div>
+              {isUploading && <p className="text-sm text-gray-500 mt-1">Uploading...</p>}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -609,6 +818,63 @@ const AdminPage = () => {
           <div className="flex gap-3 justify-end">
             <Button variant="outline" onClick={() => setShowEventModal(false)}>Cancel</Button>
             <Button onClick={handleSaveEvent} disabled={isSaving || !eventForm.title || !eventForm.date || !eventForm.time || !eventForm.location || !eventForm.description} className="bg-green-600 hover:bg-green-700">
+              {isSaving ? 'Saving...' : <><Save className="w-4 h-4 mr-2" /> Save</>}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Service Modal */}
+      <Dialog open={showServiceModal} onOpenChange={setShowServiceModal}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{editingItem ? 'Edit Service' : 'Add Service'}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+              <input type="text" value={serviceForm.title} onChange={(e) => setServiceForm({ ...serviceForm, title: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="Service title" required />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
+              <div className="flex gap-2">
+                <input type="url" value={serviceForm.image_url} onChange={(e) => setServiceForm({ ...serviceForm, image_url: e.target.value })} className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" placeholder="Image URL or upload" />
+                <input type="file" id="service-upload" accept="image/*" className="hidden" onChange={(e) => { handleImageUpload(e.target.files[0], (url) => setServiceForm({ ...serviceForm, image_url: url })); e.target.value = ''; }} />
+                <Button type="button" variant="outline" disabled={isUploading} className="px-4" onClick={() => document.getElementById('service-upload').click()}>
+                  <Upload className="w-4 h-4" />
+                </Button>
+              </div>
+              {serviceForm.image_url && <img src={serviceForm.image_url} alt="Preview" className="mt-2 h-32 w-full object-cover rounded-xl" />}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Icon</label>
+                <select value={serviceForm.icon} onChange={(e) => setServiceForm({ ...serviceForm, icon: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none">
+                  <option value="Sprout">Sprout (Products)</option>
+                  <option value="FlaskConical">Flask (Soil Analysis)</option>
+                  <option value="Droplets">Droplets (Irrigation)</option>
+                  <option value="GraduationCap">Graduation (Training)</option>
+                  <option value="FolderKanban">Folder (Project Mgmt)</option>
+                  <option value="Users">Users (Consultancy)</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Sort Order</label>
+                <input type="number" value={serviceForm.sort_order} onChange={(e) => setServiceForm({ ...serviceForm, sort_order: parseInt(e.target.value) || 0 })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+              <textarea rows={3} value={serviceForm.description} onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none resize-none" placeholder="Service description" required />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Features (one per line)</label>
+              <textarea rows={4} value={serviceForm.features} onChange={(e) => setServiceForm({ ...serviceForm, features: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 outline-none resize-none" placeholder="Premium vegetable seeds&#10;Quality fertilizers&#10;Effective pesticides" />
+            </div>
+          </div>
+          <div className="flex gap-3 justify-end">
+            <Button variant="outline" onClick={() => setShowServiceModal(false)}>Cancel</Button>
+            <Button onClick={handleSaveService} disabled={isSaving || !serviceForm.title || !serviceForm.description} className="bg-green-600 hover:bg-green-700">
               {isSaving ? 'Saving...' : <><Save className="w-4 h-4 mr-2" /> Save</>}
             </Button>
           </div>

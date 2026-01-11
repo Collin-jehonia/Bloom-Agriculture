@@ -7,21 +7,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { eventsService, galleryService } from "@/lib/supabase";
+import { eventsService, galleryService, settingsService } from "@/lib/supabase";
+
+const DEFAULT_HERO = "https://images.unsplash.com/photo-1741874299706-2b8e16839aaa?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHw0fHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85";
+const DEFAULT_SIDE = "https://images.unsplash.com/photo-1746014929708-fcb859fd3185?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85";
 
 const HomePage = () => {
   const [events, setEvents] = useState([]);
   const [gallery, setGallery] = useState([]);
+  const [siteSettings, setSiteSettings] = useState({ hero_image: DEFAULT_HERO, hero_side_image: DEFAULT_SIDE });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [eventsData, galleryData] = await Promise.all([
+        const [eventsData, galleryData, settingsData] = await Promise.all([
           eventsService.getAll(null, true),
-          galleryService.getAll()
+          galleryService.getAll(),
+          settingsService.get()
         ]);
         setEvents(eventsData.slice(0, 2));
         setGallery(galleryData.slice(0, 4));
+        if (settingsData) {
+          setSiteSettings({
+            hero_image: settingsData.hero_image || DEFAULT_HERO,
+            hero_side_image: settingsData.hero_side_image || DEFAULT_SIDE
+          });
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -50,7 +61,7 @@ const HomePage = () => {
       <section data-testid="hero-section" className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1741874299706-2b8e16839aaa?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHw0fHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85"
+            src={siteSettings.hero_image}
             alt="Sustainable Agriculture"
             className="w-full h-full object-cover animate-scale-in"
           />
@@ -108,7 +119,7 @@ const HomePage = () => {
               <div className="relative group">
                 <div className="absolute -inset-4 bg-gradient-to-r from-green-500 to-lime-500 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity animate-pulse-slow" />
                 <img
-                  src="https://images.unsplash.com/photo-1746014929708-fcb859fd3185?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGFncmljdWx0dXJlJTIwZmFybWluZyUyMEFmcmljYXxlbnwwfHx8fDE3NjgwNzkwMzR8MA&ixlib=rb-4.1.0&q=85"
+                  src={siteSettings.hero_side_image}
                   alt="African Farmer"
                   className="relative rounded-3xl shadow-2xl w-full h-[500px] object-cover group-hover:scale-[1.02] transition-transform duration-500"
                 />

@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://wwfhaxdvizqzaqrnusiz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3ZmhheGR2aXpxemFxcm51c2l6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM0NTU4NjgsImV4cCI6MjA1OTAzMTg2OH0.q5Q7nPzd-IQfzo30c4MWSoJawF1KB4QBnUsLhNZUDsg';
+const supabaseUrl = 'https://okjrvkfhbgonrsaiehpl.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ranJ2a2ZoYmdvbnJzYWllaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgwNzcyNzksImV4cCI6MjA4MzY1MzI3OX0.vswTksd3uz48-TBDUSGCmsLcO1MtPl41acYbu4OvIbM';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -94,6 +94,58 @@ export const eventsService = {
   }
 };
 
+// Services functions
+export const servicesService = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true });
+    if (error) {
+      console.error('Error fetching services:', error);
+      return [];
+    }
+    return data || [];
+  },
+
+  async getAllAdmin() {
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .order('sort_order', { ascending: true });
+    if (error) {
+      console.error('Error fetching services:', error);
+      return [];
+    }
+    return data || [];
+  },
+
+  async create(service) {
+    const newService = {
+      ...service,
+      id: crypto.randomUUID(),
+      created_at: new Date().toISOString(),
+      is_active: true
+    };
+    const { data, error } = await supabase.from('services').insert(newService).select();
+    if (error) throw error;
+    return data[0];
+  },
+
+  async update(id, updates) {
+    const { data, error } = await supabase.from('services').update(updates).eq('id', id).select();
+    if (error) throw error;
+    return data[0];
+  },
+
+  async delete(id) {
+    const { error } = await supabase.from('services').delete().eq('id', id);
+    if (error) throw error;
+    return true;
+  }
+};
+
 // Contact messages functions
 export const contactService = {
   async getAll() {
@@ -130,6 +182,77 @@ export const contactService = {
     const { error } = await supabase.from('contact_messages').delete().eq('id', id);
     if (error) throw error;
     return true;
+  }
+};
+
+// Storage service for image uploads
+export const storageService = {
+  async uploadImage(file, folder = 'images') {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `${folder}/${fileName}`;
+    
+    const { data, error } = await supabase.storage
+      .from('bloom-images')
+      .upload(filePath, file, { cacheControl: '3600', upsert: false });
+    
+    if (error) throw error;
+    
+    const { data: urlData } = supabase.storage
+      .from('bloom-images')
+      .getPublicUrl(filePath);
+    
+    return urlData.publicUrl;
+  },
+
+  async deleteImage(url) {
+    if (!url || !url.includes('bloom-images')) return;
+    const path = url.split('bloom-images/')[1];
+    if (path) {
+      await supabase.storage.from('bloom-images').remove([path]);
+    }
+  }
+};
+
+// Site settings service for homepage images
+export const settingsService = {
+  async get() {
+    const { data, error } = await supabase
+      .from('site_settings')
+      .select('*')
+      .single();
+    
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error fetching settings:', error);
+    }
+    
+    return data || {
+      hero_image: 'https://images.unsplash.com/photo-1741874299706-2b8e16839aaa',
+      hero_side_image: 'https://images.unsplash.com/photo-1746014929708-fcb859fd3185',
+      about_image_1: '',
+      about_image_2: ''
+    };
+  },
+
+  async update(settings) {
+    const { data: existing } = await supabase.from('site_settings').select('id').single();
+    
+    if (existing) {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .update(settings)
+        .eq('id', existing.id)
+        .select();
+      if (error) throw error;
+      return data[0];
+    } else {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .insert({ id: crypto.randomUUID(), ...settings })
+        .select();
+      if (error) throw error;
+      return data[0];
+    }
   }
 };
 
