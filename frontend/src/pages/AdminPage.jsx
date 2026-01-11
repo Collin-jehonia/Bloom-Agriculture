@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Leaf, LogOut, Plus, Trash2, Edit, Eye, MessageSquare, LayoutDashboard,
-  Images, CalendarDays, Settings, X, Save, CheckCircle2, AlertCircle, Menu
+  Images, CalendarDays, Settings, X, Save, CheckCircle2, AlertCircle, Menu, Database
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,11 +10,14 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import axios from "axios";
-import { API } from "@/App";
+import { galleryService, eventsService, contactService, adminService, seedDatabase } from "@/lib/supabase";
 
 // Logo URL
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_bloom-redesign-1/artifacts/q2u8vu9s_image.png";
+
+// Admin credentials
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "bloom2024";
 
 const AdminPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -47,16 +50,16 @@ const AdminPage = () => {
 
   const fetchAllData = async () => {
     try {
-      const [statsRes, galleryRes, eventsRes, messagesRes] = await Promise.all([
-        axios.get(`${API}/admin/stats`),
-        axios.get(`${API}/gallery?active_only=false`),
-        axios.get(`${API}/events?active_only=false`),
-        axios.get(`${API}/contact`)
+      const [statsData, galleryData, eventsData, messagesData] = await Promise.all([
+        adminService.getStats(),
+        galleryService.getAll(null, false),
+        eventsService.getAll(null, false, false),
+        contactService.getAll()
       ]);
-      setStats(statsRes.data);
-      setGallery(galleryRes.data);
-      setEvents(eventsRes.data);
-      setMessages(messagesRes.data);
+      setStats(statsData);
+      setGallery(galleryData);
+      setEvents(eventsData);
+      setMessages(messagesData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -66,18 +69,17 @@ const AdminPage = () => {
     e.preventDefault();
     setIsLoggingIn(true);
     setLoginError("");
-    try {
-      const response = await axios.post(`${API}/admin/login`, loginForm);
-      if (response.data.success) {
-        localStorage.setItem('adminToken', response.data.token);
-        setToken(response.data.token);
-        setIsLoggedIn(true);
-      }
-    } catch (error) {
+    
+    // Simple client-side auth
+    if (loginForm.username === ADMIN_USERNAME && loginForm.password === ADMIN_PASSWORD) {
+      const token = btoa(`${loginForm.username}:${Date.now()}`);
+      localStorage.setItem('adminToken', token);
+      setToken(token);
+      setIsLoggedIn(true);
+    } else {
       setLoginError("Invalid username or password");
-    } finally {
-      setIsLoggingIn(false);
     }
+    setIsLoggingIn(false);
   };
 
   const handleLogout = () => {
@@ -96,10 +98,10 @@ const AdminPage = () => {
     setIsSaving(true);
     try {
       if (editingItem) {
-        await axios.put(`${API}/gallery/${editingItem.id}`, galleryForm);
+        await galleryService.update(editingItem.id, galleryForm);
         showNotification("Gallery item updated successfully");
       } else {
-        await axios.post(`${API}/gallery`, galleryForm);
+        await galleryService.create(galleryForm);
         showNotification("Gallery item added successfully");
       }
       setShowGalleryModal(false);
@@ -116,7 +118,7 @@ const AdminPage = () => {
   const handleDeleteGallery = async (id) => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
     try {
-      await axios.delete(`${API}/gallery/${id}`);
+      await galleryService.delete(id);
       showNotification("Gallery item deleted");
       fetchAllData();
     } catch (error) {
@@ -135,10 +137,10 @@ const AdminPage = () => {
     setIsSaving(true);
     try {
       if (editingItem) {
-        await axios.put(`${API}/events/${editingItem.id}`, eventForm);
+        await eventsService.update(editingItem.id, eventForm);
         showNotification("Event updated successfully");
       } else {
-        await axios.post(`${API}/events`, eventForm);
+        await eventsService.create(eventForm);
         showNotification("Event added successfully");
       }
       setShowEventModal(false);
@@ -155,7 +157,7 @@ const AdminPage = () => {
   const handleDeleteEvent = async (id) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
     try {
-      await axios.delete(`${API}/events/${id}`);
+      await eventsService.delete(id);
       showNotification("Event deleted");
       fetchAllData();
     } catch (error) {
@@ -172,7 +174,7 @@ const AdminPage = () => {
   // Messages
   const handleMarkRead = async (id) => {
     try {
-      await axios.put(`${API}/contact/${id}/read`);
+      await contactService.markAsRead(id);
       fetchAllData();
     } catch (error) {
       console.error('Error marking message as read:', error);
@@ -182,7 +184,7 @@ const AdminPage = () => {
   const handleDeleteMessage = async (id) => {
     if (!window.confirm("Delete this message?")) return;
     try {
-      await axios.delete(`${API}/contact/${id}`);
+      await contactService.delete(id);
       showNotification("Message deleted");
       fetchAllData();
     } catch (error) {
@@ -193,8 +195,8 @@ const AdminPage = () => {
   // Seed Data
   const handleSeedData = async () => {
     try {
-      await axios.post(`${API}/seed`);
-      showNotification("Sample data added successfully");
+      const result = await seedDatabase();
+      showNotification(result.message);
       fetchAllData();
     } catch (error) {
       showNotification("Failed to seed data", "error");
@@ -392,7 +394,7 @@ const AdminPage = () => {
                   <Plus className="w-4 h-4 mr-2" /> Add Event
                 </Button>
                 <Button onClick={handleSeedData} variant="outline">
-                  <Settings className="w-4 h-4 mr-2" /> Load Sample Data
+                  <Database className="w-4 h-4 mr-2" /> Load Sample Data
                 </Button>
               </CardContent>
             </Card>
