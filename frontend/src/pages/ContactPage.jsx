@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { contactService } from "@/lib/supabase";
+import emailjs from "@emailjs/browser";
+
+// EmailJS configuration - replace these with your actual EmailJS credentials
+const EMAILJS_SERVICE_ID = "service_axtsoq9";
+const EMAILJS_TEMPLATE_ID = "template_4624eyt";
+const EMAILJS_PUBLIC_KEY = "qyqcXlIvWXFao8T1T";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -24,6 +30,15 @@ const ContactPage = () => {
     
     try {
       await contactService.create(formData);
+
+      // Send email notification via EmailJS (fire-and-forget)
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        name: formData.name,
+        email: formData.email,
+        title: `New message from ${formData.name}`,
+        message: formData.message,
+      }, EMAILJS_PUBLIC_KEY).catch((err) => console.error("EmailJS error:", err));
+
       setSubmitted(true);
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (err) {
